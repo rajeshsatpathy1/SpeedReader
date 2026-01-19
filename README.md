@@ -9,7 +9,7 @@ A modern, distraction-free speed reading web application built with **React** an
 - **🚀 RSVP Reading Engine**: Reads text word-by-word at your desired WPM (Words Per Minute).
 - **📝 Rich Text Support**: Preserves **bold**, *italics*, and headers from pasted text or uploaded documents.
 - **📂 File Upload**: Support for reading directly from `.txt`, `.pdf`, and `.docx` files.
-- **📄 Sample Text**: Includes the essay ["Good Writing" by Paul Graham](https://paulgraham.com/goodwriting.html) for quick testing.
+- **📄 Sample Text**: Includes a snippet from the story "Wheel of Yugas" to demonstrate rich text and length handling.
 - **🎨 Theming**: Includes Light, Dark, Sepia, and Matrix themes.
 - **👁️ Optical Alignment**: Uses advanced centering logic to keep your eyes focused on the red "pivot" character.
 - **📱 Responsive**: Works beautifully on desktop and mobile devices.

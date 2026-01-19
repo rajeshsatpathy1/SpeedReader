@@ -33,7 +33,7 @@ const InfoIcon = ({ onLoadSample }) => {
                                     setVisible(false);
                                 }}
                             >
-                                Try a default text
+                                Try a default document
                             </button>
                         </div>
                     )}
