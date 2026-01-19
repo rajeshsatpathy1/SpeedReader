@@ -2,7 +2,8 @@
 
 A modern, distraction-free speed reading web application built with **React** and **Vite**. This app uses the **RSVP (Rapid Serial Visual Presentation)** method to help you read faster by displaying words one at a time, keeping the optimal recognition point (ORP) centered.
 
-### [🚀 **[Live Demo](https://rajeshsatpathy1.github.io/SpeedReader/)** • **[How the Algorithm Works](./RSVP_ALGORITHM.md)**
+- ### 🚀 **[Live Demo](https://rajeshsatpathy1.github.io/SpeedReader/)** 
+- ### 📚 **[How the Thing Works](./RSVP_ALGORITHM.md)**
 
 ## Features
 

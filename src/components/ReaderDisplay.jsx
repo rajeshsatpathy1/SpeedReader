@@ -30,9 +30,8 @@ const ReaderDisplay = ({ wordObj, fontSizeScale = 1 }) => {
     // Compute font size multiplier
     const sizeMultiplier = useMemo(() => {
         let mult = 1;
-        if (styles.includes('H1')) mult = 2.5;
-        else if (styles.includes('H2')) mult = 2;
-        else if (styles.includes('H3')) mult = 1.75;
+        // Cap H1 and H2 at H3 size (1.75) to prevent overflow
+        if (styles.includes('H1') || styles.includes('H2') || styles.includes('H3')) mult = 1.75;
         else if (styles.includes('SMALL')) mult = 0.8;
         return mult * fontSizeScale;
     }, [styles, fontSizeScale]);
