@@ -47,48 +47,69 @@ The visual renderer centers the word not by its geometric center, but by its **O
 
 ## 5. Logic Flow Diagram
 
-```mermaid
-flowchart TD
-    UserInput[User Pastes HTML/Text] --> Parser
-    
-    subgraph Parsing Phase
-        Parser[Traverse DOM Tree]
-        Parser --> CheckNode{Node Type?}
-        
-        CheckNode -- Element Node --> CaptureStyle[Inherit Styles (B, I, H1...)]
-        CaptureStyle --> Recurse[Recurse Children]
-        Recurse --> CheckBlockEnd{End of Block?}
-        CheckBlockEnd -- Yes --> MarkFlag[Mark Last Word: isBlockEnd=true]
-        
-        CheckNode -- Text Node --> SplitHyphens[Replace '-' with ' - ']
-        SplitHyphens --> Tokenize[Split by Whitespace]
-        Tokenize --> CreateObjects[Create Word Objects\n{text, styles}]
-    end
-
-    CreateObjects --> WordList[Word List Ready]
-    
-    subgraph Playback Phase
-        WordList --> StartLoop[Start Playback Loop]
-        StartLoop --> GetWord[Get Current Word]
-        GetWord --> CalcBase[Base Delay = 60000/WPM]
-        
-        CalcBase --> CheckHeading{Is Heading?}
-        CheckHeading -- Yes --> MultHeading[Multiplier * 2.0]
-        CheckHeading -- No --> CheckPunct{Check Punctuation}
-        
-        MultHeading --> CheckPunct
-        
-        CheckPunct -- "Block End" --> PauseBlock[Pause * 1.8]
-        CheckPunct -- ". ! ?" --> PauseSent[Pause * 1.5]
-        CheckPunct -- ", ; :" --> PauseComma[Pause * 1.2]
-        
-        PauseBlock --> ApplyDelay[Set Timeout(NextWord, TotalDelay)]
-        PauseSent --> ApplyDelay
-        PauseComma --> ApplyDelay
-        
-        ApplyDelay --> UpdateIndex[Index++]
-        UpdateIndex --> Loop{End of List?}
-        Loop -- No --> GetWord
-        Loop -- Yes --> Stop
-    end
+```text
+       [User Pastes HTML/Text]
+                  |
+                  v
+         +------------------+
+         |      PARSER      |
+         +------------------+
+                  |
+        +---------+---------+
+        |                   |
+  [Element Node]       [Text Node]
+        |                   |
+        v                   v
+  Inherit Styles      Replace '-' 
+  (B, I, H1...)       with ' - '
+        |                   |
+        v                   v
+   Recurse Children    Split by 
+        |             Whitespace
+        v                   |
+   End of Block?            v
+  (If yes, mark       Create Word
+   isBlockEnd)          Objects
+                            |
+                            v
+                    [Word List Ready]
+                            |
+                            v
+         +------------------+
+         |  PLAYBACK LOOP   |
+         +------------------+
+                  |
+        +-----> Get Word <------+
+        |         |             |
+        |         v             |
+        |    Calc Base Delay    |
+        |    (60000 / WPM)      |
+        |         |             |
+        |         v             |
+        |    Is Heading? --Yes-> Multiply x2.0
+        |         |             |
+        |         No            |
+        |         v             |
+        |    Check Punctuation  |
+        |    /    |      \      |
+        | Block   |       |     |
+        |  End  Sentence  Comma |
+        |   |     |       |     |
+        | x1.8   x1.5    x1.2   |
+        |   |     |       |     |
+        |   +-----+-------+     |
+        |         |             |
+        |         v             |
+        |    Set Timeout        |
+        |         |             |
+        |         v             |
+        |      Index++          |
+        |         |             |
+        |         v             |
+        +---- No--End?          |
+                  |             |
+                 Yes            |
+                  |             |
+                  v             |
+                [STOP]          |
 ```
