@@ -1,0 +1,132 @@
+.text-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 800px;
+    flex-grow: 1;
+    /* Take up remaining space */
+}
+
+.editor-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.rich-text-editor {
+    width: 100%;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 2px dashed var(--text-color);
+    border-radius: 8px;
+    padding: 1rem;
+    padding-right: 3rem;
+    /* Space for clear button */
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    opacity: 0.8;
+    /* preserve whitespace handling */
+    white-space: pre-wrap;
+    outline: none;
+    text-align: left;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.clear-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.1s;
+    user-select: none;
+}
+
+.clear-btn:hover {
+    background: var(--highlight-color);
+    color: white;
+}
+
+.clear-btn:active {
+    transform: scale(0.9);
+}
+
+.rich-text-editor:focus {
+    border-style: solid;
+    border-color: var(--highlight-color);
+    opacity: 1;
+}
+
+.rich-text-editor:empty:before {
+    content: attr(data-placeholder);
+    color: var(--text-color);
+    opacity: 0.4;
+    font-style: italic;
+}
+
+.action-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.start-btn {
+    flex: 1;
+    /* Sharing space equally */
+    padding: 1rem;
+    background-color: var(--highlight-color);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: filter 0.2s;
+}
+
+.start-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.secondary-btn {
+    flex: 1;
+    padding: 1rem;
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.secondary-btn:hover:not(:disabled) {
+    background: rgba(128, 128, 128, 0.1);
+}
+
+.secondary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

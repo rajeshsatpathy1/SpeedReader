@@ -1,0 +1,86 @@
+.reader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 300px;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  /* Match controls width */
+  margin: 0 auto;
+  /* Center it */
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+
+  /* Responsive constraints */
+  width: 95vw;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .reader-container {
+    /* On mobile, force font size down if it was set too high globally */
+    /* We can't easily override inline styles without !important, 
+           but we can rely on user adjusting the slider. 
+           However, we can help by reducing the base relative size. */
+    font-size: 0.8rem;
+  }
+}
+
+.word-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  width: 100%;
+  white-space: pre;
+  line-height: 1;
+  font-family: 'Inter', sans-serif;
+  /* Ensure tight packing of letters */
+  column-gap: 0;
+}
+
+.word-left {
+  text-align: right;
+  /* No width set, let it fill the 1fr track */
+}
+
+.word-highlight {
+  color: var(--highlight-color);
+  text-align: center;
+  font-weight: bold;
+}
+
+.word-right {
+  text-align: left;
+}
+
+.center-guide-top,
+.center-guide-bottom {
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 10px;
+  background-color: var(--highlight-color);
+  opacity: 0.3;
+  transform: translateX(-50%);
+}
+
+.center-guide-top {
+  top: 20%;
+}
+
+.center-guide-bottom {
+  bottom: 20%;
+}
+
+.bold {
+  font-weight: 800;
+}
+
+.italic {
+  font-style: italic;
+}

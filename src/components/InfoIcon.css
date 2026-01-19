@@ -1,0 +1,72 @@
+.info-icon-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.info-btn {
+    background: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    cursor: help;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.info-btn:hover {
+    opacity: 1;
+}
+
+.info-tooltip {
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    font-size: 0.9rem;
+    text-align: left;
+    line-height: 1.4;
+    pointer-events: none;
+    /* Let clicks pass through if easier, or auto-close */
+}
+
+.info-tooltip strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--highlight-color);
+}
+
+.info-tooltip p {
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.info-tooltip .note {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    border-top: 1px solid var(--text-color);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.note-label {
+    font-weight: bold;
+    color: var(--highlight-color);
+}
