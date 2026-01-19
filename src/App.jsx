@@ -6,6 +6,7 @@ import Controls from './components/Controls'
 import TextInput from './components/TextInput'
 import Settings from './components/Settings'
 import InfoIcon from './components/InfoIcon'
+import { sampleText } from './utils/sampleText'
 
 function App() {
   const [inputText, setInputText] = useState('');
@@ -33,11 +34,16 @@ function App() {
     setHasStarted(false);
   };
 
+  const handleLoadSample = () => {
+    setInputText(sampleText);
+    setHasStarted(false);
+  };
+
   return (
     <>
       <h1 className="title">
         Speed<span className="highlight-text">Reader</span>
-        <InfoIcon />
+        <InfoIcon onLoadSample={handleLoadSample} />
       </h1>
 
       {!hasStarted ? (

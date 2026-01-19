@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './InfoIcon.css';
 
-const InfoIcon = () => {
+const InfoIcon = ({ onLoadSample }) => {
     const [visible, setVisible] = useState(false);
 
     return (
-        <div className="info-icon-container">
+        <div
+            className="info-icon-container"
+        >
             <button
                 className="info-btn"
                 onClick={() => setVisible(!visible)}
-                onMouseEnter={() => setVisible(true)}
-                onMouseLeave={() => setVisible(false)}
                 aria-label="App Information"
             >
                 i
@@ -22,6 +22,21 @@ const InfoIcon = () => {
                     <p className="note">
                         <span className="note-label">Note:</span> This reader preserves <b>bold</b>, <i>italics</i>, and headers from your source text to maintain the original emphasis!
                     </p>
+
+                    {onLoadSample && (
+                        <div className="tooltip-action">
+                            <button
+                                className="link-btn"
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent closing
+                                    onLoadSample();
+                                    setVisible(false);
+                                }}
+                            >
+                                Try a default text
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

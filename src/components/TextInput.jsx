@@ -11,7 +11,7 @@ const TextInput = ({ setInputText, onStart, initialValue = '' }) => {
         if (editorRef.current && initialValue) {
             editorRef.current.innerHTML = initialValue;
         }
-    }, []); // Run only on mount
+    }, [initialValue]); // Run when initialValue changes
 
     const handleStart = () => {
         if (editorRef.current) {
