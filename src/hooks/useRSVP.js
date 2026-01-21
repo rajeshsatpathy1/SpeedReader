@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 const useRSVP = (inputText, wpm, isPlaying) => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [fontSizes, setFontSizes] = useState({ heading: '4rem', subHeading: '3rem', normal: '4rem' });
   const timerRef = useRef(null);
 
   // Parsing Logic
@@ -17,6 +18,7 @@ const useRSVP = (inputText, wpm, isPlaying) => {
       tempDiv.innerHTML = html;
 
       const result = [];
+      const lengths = { heading: 0, sub: 0, normal: 0 };
 
       const traverse = (node, styles = []) => {
         if (node.nodeType === Node.TEXT_NODE) {
@@ -29,6 +31,15 @@ const useRSVP = (inputText, wpm, isPlaying) => {
           const splitWords = preprocessed.trim().split(/\s+/);
           splitWords.forEach(word => {
             if (word) {
+              const len = word.length;
+              if (styles.includes('H1') || styles.includes('H2')) {
+                lengths.heading = Math.max(lengths.heading, len);
+              } else if (styles.some(s => ['H3', 'H4', 'H5', 'H6'].includes(s))) {
+                lengths.sub = Math.max(lengths.sub, len);
+              } else {
+                lengths.normal = Math.max(lengths.normal, len);
+              }
+
               result.push({
                 text: word,
                 styles: [...styles]
@@ -72,10 +83,28 @@ const useRSVP = (inputText, wpm, isPlaying) => {
       };
 
       traverse(tempDiv);
-      return result;
+      return { result, lengths };
     };
 
-    setWords(parseHtmlToWords(inputText));
+    const { result, lengths } = parseHtmlToWords(inputText);
+
+    // Calculate Safe Sizes
+    const CONTAINER_REM = 32; // ~512px at 16px base, comfortably fits in 600px width
+    const CHAR_EMPIRICAL_WIDTH = 0.6; // Approximate average width of a character in rem per 1rem font size
+
+    const calculateSafeSize = (maxLen, maxCap) => {
+      if (maxLen === 0) return maxCap;
+      const safeSize = CONTAINER_REM / (maxLen * CHAR_EMPIRICAL_WIDTH);
+      return Math.min(safeSize, maxCap);
+    };
+
+    setFontSizes({
+      heading: calculateSafeSize(lengths.heading, 6), // Cap at 6rem
+      subHeading: calculateSafeSize(lengths.sub, 4.5), // Cap at 4.5rem
+      normal: calculateSafeSize(lengths.normal, 4.5) // Cap at 4.5rem
+    });
+
+    setWords(result);
     setCurrentIndex(0);
   }, [inputText]);
 
@@ -139,7 +168,8 @@ const useRSVP = (inputText, wpm, isPlaying) => {
     totalWords: words.length,
     progress: words.length ? (currentIndex / words.length) * 100 : 0,
     reset,
-    setProgress
+    setProgress,
+    fontSizes
   };
 };
 

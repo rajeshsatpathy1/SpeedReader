@@ -16,7 +16,7 @@ function App() {
   const [fontSizeScale, setFontSizeScale] = useState(1);
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
 
-  const { currentWord, progress, reset, setProgress, totalWords, currentIndex } = useRSVP(inputText, wpm, isPlaying);
+  const { currentWord, progress, reset, setProgress, totalWords, currentIndex, fontSizes } = useRSVP(inputText, wpm, isPlaying);
 
   // Apply theme to html element
   useEffect(() => {
@@ -50,7 +50,7 @@ function App() {
         <TextInput setInputText={setInputText} onStart={handleStart} initialValue={inputText} />
       ) : (
         <>
-          <ReaderDisplay wordObj={currentWord} fontSizeScale={fontSizeScale} />
+          <ReaderDisplay wordObj={currentWord} fontSizeScale={fontSizeScale} fontSizes={fontSizes} />
 
           <Controls
             isPlaying={isPlaying}

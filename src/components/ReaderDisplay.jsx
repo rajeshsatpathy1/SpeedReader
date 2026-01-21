@@ -10,7 +10,7 @@ const getORPIndex = (word) => {
     return 4; // >13 -> 5th letter
 };
 
-const ReaderDisplay = ({ wordObj, fontSizeScale = 1 }) => {
+const ReaderDisplay = ({ wordObj, fontSizeScale = 1, fontSizes }) => {
     const { text, styles } = wordObj || { text: "Paste text to start", styles: [] };
 
     const orpIndex = useMemo(() => wordObj ? getORPIndex(text) : 0, [text, wordObj]);
@@ -27,20 +27,31 @@ const ReaderDisplay = ({ wordObj, fontSizeScale = 1 }) => {
         return classes.join(' ');
     }, [styles]);
 
-    // Compute font size multiplier
-    const sizeMultiplier = useMemo(() => {
+    // Compute font size
+    const fontSizeValue = useMemo(() => {
+        if (fontSizes) {
+            if (styles.includes('H1') || styles.includes('H2')) {
+                return `${fontSizes.heading}rem`;
+            }
+            if (styles.some(s => /^H[3-6]$/.test(s))) {
+                return `${fontSizes.subHeading}rem`;
+            }
+            return `${fontSizes.normal}rem`;
+        }
+
+        // Legacy: Compute font size multiplier
         let mult = 1;
         // Cap H1 and H2 at H3 size (1.75) to prevent overflow
         if (styles.includes('H1') || styles.includes('H2') || styles.includes('H3')) mult = 1.75;
         else if (styles.includes('SMALL')) mult = 0.8;
-        return mult * fontSizeScale;
-    }, [styles, fontSizeScale]);
+        return `${4 * mult * fontSizeScale}rem`;
+    }, [styles, fontSizeScale, fontSizes]);
 
 
     if (!wordObj && !text) return <div className="reader-display placeholder">Ready</div>;
 
     return (
-        <div className="reader-container" style={{ fontSize: `${4 * sizeMultiplier}rem` }}>
+        <div className="reader-container" style={{ fontSize: fontSizeValue }}>
             <div className={`word-row ${className}`}>
                 <span className="word-left">{leftPart}</span>
                 <span className="word-highlight">{highlightChar}</span>
