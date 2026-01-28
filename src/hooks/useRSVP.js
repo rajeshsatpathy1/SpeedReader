@@ -4,6 +4,8 @@ const useRSVP = (inputText, wpm, isPlaying) => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fontSizes, setFontSizes] = useState({ heading: '4rem', subHeading: '3rem', normal: '4rem' });
+  const [toc, setToc] = useState([]);
+  const [currentContext, setCurrentContext] = useState({ section: '', subSection: '' });
   const timerRef = useRef(null);
 
   // Parsing Logic
@@ -19,6 +21,7 @@ const useRSVP = (inputText, wpm, isPlaying) => {
 
       const result = [];
       const lengths = { heading: 0, sub: 0, normal: 0 };
+      const tempToc = [];
 
       const traverse = (node, styles = []) => {
         if (node.nodeType === Node.TEXT_NODE) {
@@ -34,6 +37,11 @@ const useRSVP = (inputText, wpm, isPlaying) => {
               const len = word.length;
               if (styles.includes('H1') || styles.includes('H2')) {
                 lengths.heading = Math.max(lengths.heading, len);
+
+                // Add to TOC if it's the start of a heading word block
+                // Simplified: We'll grab the whole heading text later or just use the first word for now.
+                // Better approach for TOC: The parser splits words. We need to reconstruct the heading.
+                // Or simplified: Mark this word-index as a heading anchor.
               } else if (styles.some(s => ['H3', 'H4', 'H5', 'H6'].includes(s))) {
                 lengths.sub = Math.max(lengths.sub, len);
               } else {
@@ -55,6 +63,15 @@ const useRSVP = (inputText, wpm, isPlaying) => {
           if (['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'B', 'STRONG', 'I', 'EM', 'U', 'SMALL'].includes(tagName)) {
             newStyles.push(tagName);
           }
+
+          if (/^H[1-6]$/.test(tagName)) {
+            tempToc.push({
+              text: node.textContent,
+              index: result.length,
+              level: parseInt(tagName[1])
+            });
+          }
+
           // Inline styles
           const style = node.style;
           if (style.fontWeight === 'bold' || Number(style.fontWeight) >= 700) {
@@ -82,11 +99,17 @@ const useRSVP = (inputText, wpm, isPlaying) => {
         }
       };
 
+
+
       traverse(tempDiv);
-      return { result, lengths };
+      return { result, lengths, tempToc };
     };
 
-    const { result, lengths } = parseHtmlToWords(inputText);
+    const { result, lengths, tempToc } = parseHtmlToWords(inputText);
+
+    // Filter empty TOC items
+    const refinedToc = tempToc.filter(item => item.text.trim().length > 0);
+    setToc(refinedToc);
 
     // Calculate Safe Sizes
     const CONTAINER_REM = 32; // ~512px at 16px base, comfortably fits in 600px width
@@ -159,6 +182,36 @@ const useRSVP = (inputText, wpm, isPlaying) => {
     return () => clearTimeout(timerRef.current);
   }, [isPlaying, currentIndex, wpm, words]); // Re-runs every time index changes, scheduling next word.
 
+  // Context Tracking (Active Heading)
+  useEffect(() => {
+    if (!toc.length) {
+      setCurrentContext({ section: '', subSection: '' });
+      return;
+    }
+
+    let section = '';
+    let subSection = '';
+
+    // Find the latest heading before or at currentIndex
+    // Iterate backwards or filter
+    const pastHeadings = toc.filter(h => h.index <= currentIndex);
+    if (pastHeadings.length > 0) {
+      // Find last Section (H1/H2)
+      const lastSection = [...pastHeadings].reverse().find(h => h.level <= 2);
+      if (lastSection) section = lastSection.text;
+
+      // Find last Subsection (H3-H6) that is AFTER the last section (hierarchically)
+      // Actually simple rule: just find the very last heading. If it's a sub, show it.
+      const lastHeading = pastHeadings[pastHeadings.length - 1];
+      if (lastHeading.level > 2) {
+        subSection = lastHeading.text;
+      }
+    }
+
+    setCurrentContext({ section, subSection });
+
+  }, [currentIndex, toc]);
+
   const reset = useCallback(() => setCurrentIndex(0), []);
   const setProgress = useCallback((index) => setCurrentIndex(index), []);
 
@@ -169,7 +222,9 @@ const useRSVP = (inputText, wpm, isPlaying) => {
     progress: words.length ? (currentIndex / words.length) * 100 : 0,
     reset,
     setProgress,
-    fontSizes
+    fontSizes,
+    toc,
+    currentContext
   };
 };
 

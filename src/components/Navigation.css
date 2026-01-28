@@ -1,0 +1,130 @@
+.navigation-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+    position: relative;
+    z-index: 100;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(40, 40, 40, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nav-bar:hover {
+    background: rgba(60, 60, 60, 0.7);
+}
+
+.nav-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.nav-section {
+    font-weight: 700;
+    color: var(--highlight-color);
+}
+
+.nav-separator {
+    opacity: 0.5;
+    font-size: 0.8rem;
+}
+
+.nav-subsection {
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.nav-placeholder {
+    opacity: 0.5;
+    font-style: italic;
+}
+
+.nav-toggle {
+    font-size: 0.7rem;
+    transition: transform 0.3s;
+    opacity: 0.7;
+}
+
+.nav-toggle.expanded {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background: var(--bg-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+    color: var(--text-color);
+    text-align: left;
+}
+
+.nav-item:last-child {
+    border-bottom: none;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--highlight-color);
+}
+
+/* Indentation based on hierarchy */
+.level-1 {
+    font-weight: 700;
+    padding-left: 1rem;
+}
+
+.level-2 {
+    font-weight: 600;
+    padding-left: 1rem;
+}
+
+.level-3 {
+    padding-left: 2rem;
+    opacity: 0.9;
+}
+
+.level-4 {
+    padding-left: 3rem;
+    opacity: 0.8;
+}
+
+.level-5 {
+    padding-left: 4rem;
+    opacity: 0.8;
+}
+
+.level-6 {
+    padding-left: 5rem;
+    opacity: 0.8;
+}

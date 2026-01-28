@@ -6,6 +6,7 @@ import Controls from './components/Controls'
 import TextInput from './components/TextInput'
 import Settings from './components/Settings'
 import InfoIcon from './components/InfoIcon'
+import Navigation from './components/Navigation'
 import { sampleText } from './utils/sampleText'
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
   const [fontSizeScale, setFontSizeScale] = useState(1);
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
 
-  const { currentWord, progress, reset, setProgress, totalWords, currentIndex, fontSizes } = useRSVP(inputText, wpm, isPlaying);
+  const { currentWord, progress, reset, setProgress, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying);
 
   // Apply theme to html element
   useEffect(() => {
@@ -50,6 +51,7 @@ function App() {
         <TextInput setInputText={setInputText} onStart={handleStart} initialValue={inputText} />
       ) : (
         <>
+          <Navigation toc={toc} currentContext={currentContext} onNavigate={setProgress} />
           <ReaderDisplay wordObj={currentWord} fontSizeScale={fontSizeScale} fontSizes={fontSizes} />
 
           <Controls
