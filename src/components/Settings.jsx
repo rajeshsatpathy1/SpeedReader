@@ -8,7 +8,7 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale }) => {
+const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale, isRevolverMode, setIsRevolverMode }) => {
     return (
         <div className="settings-container">
             <div className="setting-group">
@@ -43,6 +43,18 @@ const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale }) =
                     value={fontSizeScale}
                     onChange={(e) => setFontSizeScale(Number(e.target.value))}
                 />
+            </div>
+
+            <div className="setting-group" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h3>Revolver Mode</h3>
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                        checked={isRevolverMode}
+                        onChange={(e) => setIsRevolverMode(e.target.checked)}
+                    />
+                    <span className="slider round"></span>
+                </label>
             </div>
         </div>
     );

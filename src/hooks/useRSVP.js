@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const useRSVP = (inputText, wpm, isPlaying) => {
+const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fontSizes, setFontSizes] = useState({ heading: '4rem', subHeading: '3rem', normal: '4rem' });
@@ -224,7 +224,39 @@ const useRSVP = (inputText, wpm, isPlaying) => {
     setProgress,
     fontSizes,
     toc,
-    currentContext
+    currentContext,
+    currentFrame: (() => {
+      if (!words.length || currentIndex >= words.length) return [];
+      if (!isRevolverMode) return [{ word: words[currentIndex], isPrimary: true }];
+
+      const frame = [];
+      const currentWord = words[currentIndex];
+
+      // Previous Word
+      if (currentIndex > 0) {
+        const prevWord = words[currentIndex - 1];
+        // Only show previous if it didn't end a sentence
+        if (!/[\.\!\?]['"]?$/.test(prevWord.text)) {
+          frame.push({ word: prevWord, isPrimary: false });
+        }
+      }
+
+      // Current Word (Center/Focus)
+      if (currentWord) {
+        frame.push({ word: currentWord, isPrimary: true });
+      }
+
+      // Next Word
+      if (currentIndex < words.length - 1) {
+        const nextWord = words[currentIndex + 1];
+        // Only show next if current didn't end a sentence
+        if (!/[\.\!\?]['"]?$/.test(currentWord.text)) {
+          frame.push({ word: nextWord, isPrimary: false });
+        }
+      }
+
+      return frame;
+    })()
   };
 };
 

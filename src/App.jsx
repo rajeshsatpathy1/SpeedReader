@@ -16,8 +16,9 @@ function App() {
   const [currentTheme, setCurrentTheme] = useState('dark');
   const [fontSizeScale, setFontSizeScale] = useState(1);
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
+  const [isRevolverMode, setIsRevolverMode] = useState(false);
 
-  const { currentWord, progress, reset, setProgress, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying);
+  const { currentWord, currentFrame, progress, reset, setProgress, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
 
   // Apply theme to html element
   useEffect(() => {
@@ -52,7 +53,13 @@ function App() {
       ) : (
         <>
           <Navigation toc={toc} currentContext={currentContext} onNavigate={setProgress} />
-          <ReaderDisplay wordObj={currentWord} fontSizeScale={fontSizeScale} fontSizes={fontSizes} />
+          <ReaderDisplay
+            wordObj={currentWord}
+            words={currentFrame}
+            fontSizeScale={fontSizeScale}
+            fontSizes={fontSizes}
+            isRevolver={isRevolverMode}
+          />
 
           <Controls
             isPlaying={isPlaying}
@@ -77,6 +84,8 @@ function App() {
         setTheme={setCurrentTheme}
         fontSizeScale={fontSizeScale}
         setFontSizeScale={setFontSizeScale}
+        isRevolverMode={isRevolverMode}
+        setIsRevolverMode={setIsRevolverMode}
       />
     </>
   )

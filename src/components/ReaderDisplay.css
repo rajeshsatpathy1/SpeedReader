@@ -43,6 +43,12 @@
   column-gap: 0;
 }
 
+.revolver .word-row {
+  width: auto;
+  display: inline-grid;
+  /* Keep grid for ORP alignment internal to the word */
+}
+
 .word-left {
   text-align: right;
   /* No width set, let it fill the 1fr track */
