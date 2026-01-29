@@ -232,11 +232,24 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
       const frame = [];
       const currentWord = words[currentIndex];
 
+      const getHeading = (w) => w.styles ? w.styles.find(s => /^H[1-6]$/.test(s)) : undefined;
+
+      const isBoundary = (w1, w2) => {
+        if (!w1 || !w2) return false;
+        // Sentence Punctuation
+        if (/[\.\!\?]['"]?$/.test(w1.text)) return true;
+        // Block/Paragraph End
+        if (w1.isBlockEnd) return true;
+        // Heading Change
+        if (getHeading(w1) !== getHeading(w2)) return true;
+
+        return false;
+      }
+
       // Previous Word
       if (currentIndex > 0) {
         const prevWord = words[currentIndex - 1];
-        // Only show previous if it didn't end a sentence
-        if (!/[\.\!\?]['"]?$/.test(prevWord.text)) {
+        if (!isBoundary(prevWord, currentWord)) {
           frame.push({ word: prevWord, isPrimary: false });
         }
       }
@@ -249,8 +262,7 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
       // Next Word
       if (currentIndex < words.length - 1) {
         const nextWord = words[currentIndex + 1];
-        // Only show next if current didn't end a sentence
-        if (!/[\.\!\?]['"]?$/.test(currentWord.text)) {
+        if (!isBoundary(currentWord, nextWord)) {
           frame.push({ word: nextWord, isPrimary: false });
         }
       }
