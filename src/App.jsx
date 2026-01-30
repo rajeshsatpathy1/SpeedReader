@@ -14,7 +14,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [wpm, setWpm] = useState(300);
   const [currentTheme, setCurrentTheme] = useState('dark');
-  const [fontSizeScale, setFontSizeScale] = useState(1);
+
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
   const [isRevolverMode, setIsRevolverMode] = useState(false);
 
@@ -56,7 +56,6 @@ function App() {
           <ReaderDisplay
             wordObj={currentWord}
             words={currentFrame}
-            fontSizeScale={fontSizeScale}
             fontSizes={fontSizes}
             isRevolver={isRevolverMode}
           />
@@ -82,8 +81,6 @@ function App() {
       <Settings
         currentTheme={currentTheme}
         setTheme={setCurrentTheme}
-        fontSizeScale={fontSizeScale}
-        setFontSizeScale={setFontSizeScale}
         isRevolverMode={isRevolverMode}
         setIsRevolverMode={setIsRevolverMode}
       />

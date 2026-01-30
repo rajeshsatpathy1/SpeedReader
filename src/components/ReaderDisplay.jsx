@@ -10,7 +10,7 @@ const getORPIndex = (word) => {
     return 4; // >13 -> 5th letter
 };
 
-const ReaderDisplay = ({ wordObj, words = [], fontSizeScale = 1, fontSizes, isRevolver = false }) => {
+const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false }) => {
     // Helper to render a single word with ORP
     const renderORPWord = (word, key) => {
         const { text, styles } = word;
@@ -54,7 +54,7 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizeScale = 1, fontSizes, isRe
 
     // Compute font size (shared logic)
     const fontSizeValue = useMemo(() => {
-        const baseSize = 4 * fontSizeScale;
+        const baseSize = 4; // Constant baseline in rem
         let mult = 1;
         if (styles.includes('H1') || styles.includes('H2') || styles.includes('H3')) mult = 1.75;
         else if (styles.includes('SMALL')) mult = 0.8;
@@ -73,7 +73,7 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizeScale = 1, fontSizes, isRe
         }
 
         return `clamp(1rem, ${targetSize}rem, 15vw)`;
-    }, [styles, fontSizeScale, fontSizes]);
+    }, [styles, fontSizes]);
 
 
     if ((!words || words.length === 0) && !wordObj) return <div className="reader-display placeholder">Ready</div>;

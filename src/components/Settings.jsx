@@ -8,7 +8,7 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale, isRevolverMode, setIsRevolverMode }) => {
+const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode }) => {
     return (
         <div className="settings-container">
             <div className="setting-group vertical">
@@ -31,19 +31,6 @@ const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale, isR
                         </button>
                     ))}
                 </div>
-            </div>
-
-            <div className="setting-group vertical">
-                <h3>Size</h3>
-                <input
-                    type="range"
-                    min="0.5"
-                    max="3"
-                    step="0.1"
-                    value={fontSizeScale}
-                    onChange={(e) => setFontSizeScale(Number(e.target.value))}
-                    style={{ width: '100%' }}
-                />
             </div>
 
             <div className="setting-group" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
