@@ -2,15 +2,39 @@
     display: flex;
     gap: 2rem;
     align-items: center;
+    justify-content: center;
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(128, 128, 128, 0.2);
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    .settings-container {
+        gap: 1rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 .setting-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .setting-group {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .setting-group.vertical {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 .setting-group h3 {

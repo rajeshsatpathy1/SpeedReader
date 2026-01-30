@@ -3,14 +3,15 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 300px;
+  height: auto;
+  min-height: 200px;
   position: relative;
   width: 100%;
   max-width: 600px;
   /* Match controls width */
   margin: 0 auto;
   /* Center it */
-  overflow: hidden;
+  overflow: visible;
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;

@@ -11,7 +11,7 @@ const THEMES = [
 const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale, isRevolverMode, setIsRevolverMode }) => {
     return (
         <div className="settings-container">
-            <div className="setting-group">
+            <div className="setting-group vertical">
                 <h3>Theme</h3>
                 <div className="theme-options">
                     {THEMES.map(theme => (
@@ -33,7 +33,7 @@ const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale, isR
                 </div>
             </div>
 
-            <div className="setting-group">
+            <div className="setting-group vertical">
                 <h3>Size</h3>
                 <input
                     type="range"
@@ -42,6 +42,7 @@ const Settings = ({ currentTheme, setTheme, fontSizeScale, setFontSizeScale, isR
                     step="0.1"
                     value={fontSizeScale}
                     onChange={(e) => setFontSizeScale(Number(e.target.value))}
+                    style={{ width: '100%' }}
                 />
             </div>
 

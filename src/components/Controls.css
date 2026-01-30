@@ -9,6 +9,14 @@
     /* subtle glass effect */
     border-radius: 12px;
     margin-top: 1rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .controls-container {
+        gap: 1rem;
+        padding: 0.75rem;
+    }
 }
 
 .progress-bar-container {
@@ -48,6 +56,13 @@
     color: var(--bg-color);
     cursor: pointer;
     transition: transform 0.1s, opacity 0.2s;
+}
+
+@media (max-width: 600px) {
+    .play-btn {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+    }
 }
 
 .play-btn:active {
@@ -101,6 +116,12 @@
 .wpm-value {
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .wpm-value {
+        font-size: 1.2rem;
+    }
 }
 
 .wpm-label {

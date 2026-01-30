@@ -54,15 +54,25 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizeScale = 1, fontSizes, isRe
 
     // Compute font size (shared logic)
     const fontSizeValue = useMemo(() => {
-        if (fontSizes) {
-            if (styles.includes('H1') || styles.includes('H2')) return `${fontSizes.heading}rem`;
-            if (styles.some(s => /^H[3-6]$/.test(s))) return `${fontSizes.subHeading}rem`;
-            return `${fontSizes.normal}rem`;
-        }
+        const baseSize = 4 * fontSizeScale;
         let mult = 1;
         if (styles.includes('H1') || styles.includes('H2') || styles.includes('H3')) mult = 1.75;
         else if (styles.includes('SMALL')) mult = 0.8;
-        return `${4 * mult * fontSizeScale}rem`;
+
+        const targetSize = baseSize * mult;
+
+        if (fontSizes) {
+            let val;
+            if (styles.includes('H1') || styles.includes('H2')) val = fontSizes.heading;
+            else if (styles.some(s => /^H[3-6]$/.test(s))) val = fontSizes.subHeading;
+            else val = fontSizes.normal;
+
+            // Use clamp to ensure it doesn't get too big for the screen
+            // 80vw / 10 (approx max word length) = 8vw as a ceiling for responsiveness
+            return `clamp(1rem, ${val}rem, 15vw)`;
+        }
+
+        return `clamp(1rem, ${targetSize}rem, 15vw)`;
     }, [styles, fontSizeScale, fontSizes]);
 
 
@@ -70,7 +80,7 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizeScale = 1, fontSizes, isRe
 
     const containerStyles = {
         fontSize: fontSizeValue,
-        height: isRevolver ? '400px' : '300px'
+        minHeight: isRevolver ? '300px' : '200px'
     }
 
     if (isRevolver) {
