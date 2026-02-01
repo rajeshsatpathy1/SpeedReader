@@ -7,24 +7,25 @@
 
 .info-btn {
     background: transparent;
-    border: 2px solid var(--text-color);
+    border: 3px solid var(--text-color);
     color: var(--text-color);
-    width: 24px;
-    height: 24px;
+    width: 1.25em;
+    height: 1.25em;
     border-radius: 50%;
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 0.6em;
+    font-weight: 900;
     font-family: 'Inter', sans-serif;
     cursor: help;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0.6;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.3s;
 }
 
 .info-btn:hover {
     opacity: 1;
+    transform: scale(1.1) rotate(-10deg);
 }
 
 .info-tooltip {
@@ -36,13 +37,16 @@
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--text-color);
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     z-index: 100;
     font-size: 0.9rem;
+    font-weight: 400;
     text-align: left;
-    line-height: 1.4;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
     pointer-events: auto;
     letter-spacing: normal;
     /* Let clicks pass through if easier, or auto-close */

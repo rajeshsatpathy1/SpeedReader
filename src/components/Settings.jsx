@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Settings.css';
 
 const THEMES = [
@@ -9,41 +9,56 @@ const THEMES = [
 ];
 
 const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode }) => {
+    const [visible, setVisible] = useState(false);
+
     return (
         <div className="settings-container">
-            <div className="setting-group vertical">
-                <h3>Theme</h3>
-                <div className="theme-options">
-                    {THEMES.map(theme => (
-                        <button
-                            key={theme.id}
-                            className={`theme-btn ${currentTheme === theme.id ? 'active' : ''}`}
-                            onClick={() => setTheme(theme.id)}
-                            title={theme.name}
-                            style={{
-                                backgroundColor: theme.previewBg,
-                                color: theme.previewText,
-                                borderColor: currentTheme === theme.id ? 'var(--highlight-color)' : 'transparent'
-                            }}
-                        >
-                            Aa
-                            <span className="dot" style={{ backgroundColor: theme.previewHighlight }}></span>
-                        </button>
-                    ))}
-                </div>
-            </div>
+            <button
+                className="settings-btn"
+                onClick={() => setVisible(!visible)}
+                aria-label="Settings"
+                title="Settings"
+            >
+                ⚙
+            </button>
 
-            <div className="setting-group" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <h3>Revolver Mode</h3>
-                <label className="switch">
-                    <input
-                        type="checkbox"
-                        checked={isRevolverMode}
-                        onChange={(e) => setIsRevolverMode(e.target.checked)}
-                    />
-                    <span className="slider round"></span>
-                </label>
-            </div>
+            {visible && (
+                <div className="settings-dropdown">
+                    <div className="setting-group vertical">
+                        <h3>Theme</h3>
+                        <div className="theme-options">
+                            {THEMES.map(theme => (
+                                <button
+                                    key={theme.id}
+                                    className={`theme-btn ${currentTheme === theme.id ? 'active' : ''}`}
+                                    onClick={() => setTheme(theme.id)}
+                                    title={theme.name}
+                                    style={{
+                                        backgroundColor: theme.previewBg,
+                                        color: theme.previewText,
+                                        borderColor: currentTheme === theme.id ? 'var(--highlight-color)' : 'transparent'
+                                    }}
+                                >
+                                    Aa
+                                    <span className="dot" style={{ backgroundColor: theme.previewHighlight }}></span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="setting-group-row">
+                        <h3>Revolver Mode</h3>
+                        <label className="switch">
+                            <input
+                                type="checkbox"
+                                checked={isRevolverMode}
+                                onChange={(e) => setIsRevolverMode(e.target.checked)}
+                            />
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

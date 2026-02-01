@@ -16,7 +16,7 @@ function App() {
   const [currentTheme, setCurrentTheme] = useState('dark');
 
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
-  const [isRevolverMode, setIsRevolverMode] = useState(false);
+  const [isRevolverMode, setIsRevolverMode] = useState(true);
 
   const { currentWord, currentFrame, progress, reset, setProgress, nextSentence, previousSentence, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
 
@@ -44,8 +44,18 @@ function App() {
   return (
     <>
       <h1 className="title">
-        Speed<span className="highlight-text">Reader</span>
-        <InfoIcon onLoadSample={handleLoadSample} />
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem' }}>
+          <InfoIcon onLoadSample={handleLoadSample} />
+          <span>
+            Speed<span className="highlight-text">Reader</span>
+          </span>
+          <Settings
+            currentTheme={currentTheme}
+            setTheme={setCurrentTheme}
+            isRevolverMode={isRevolverMode}
+            setIsRevolverMode={setIsRevolverMode}
+          />
+        </div>
       </h1>
 
       {!hasStarted ? (
@@ -79,13 +89,6 @@ function App() {
           </button>
         </>
       )}
-
-      <Settings
-        currentTheme={currentTheme}
-        setTheme={setCurrentTheme}
-        isRevolverMode={isRevolverMode}
-        setIsRevolverMode={setIsRevolverMode}
-      />
     </>
   )
 }
