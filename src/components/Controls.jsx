@@ -1,7 +1,7 @@
 import React from 'react';
 import './Controls.css';
 
-const Controls = ({ isPlaying, setIsPlaying, wpm, setWpm, progress, setProgress, onReset, totalWords, currentIndex }) => {
+const Controls = ({ isPlaying, setIsPlaying, wpm, setWpm, progress, setProgress, onReset, onNextSentence, onPreviousSentence, totalWords, currentIndex }) => {
 
     // WPM Multipliers for quick setting
     const adjustWpm = (amount) => {
@@ -27,11 +27,19 @@ const Controls = ({ isPlaying, setIsPlaying, wpm, setWpm, progress, setProgress,
 
             <div className="main-controls">
                 <button className="icon-btn" onClick={onReset} title="Restart">
-                    ⏮
+                    ↺
                 </button>
-                <button className={`play-btn ${isPlaying ? 'active' : ''}`} onClick={() => setIsPlaying(!isPlaying)}>
-                    {isPlaying ? 'PAUSE' : 'PLAY'}
-                </button>
+                <div className="playback-group">
+                    <button className="icon-btn nav-btn" onClick={onPreviousSentence} title="Previous Sentence">
+                        «
+                    </button>
+                    <button className={`play-btn ${isPlaying ? 'active' : ''}`} onClick={() => setIsPlaying(!isPlaying)}>
+                        {isPlaying ? 'PAUSE' : 'PLAY'}
+                    </button>
+                    <button className="icon-btn nav-btn" onClick={onNextSentence} title="Next Sentence">
+                        »
+                    </button>
+                </div>
             </div>
 
             <div className="speed-controls">

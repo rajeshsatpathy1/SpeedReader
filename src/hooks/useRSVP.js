@@ -212,6 +212,55 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
 
   }, [currentIndex, toc]);
 
+  const nextSentence = useCallback(() => {
+    if (currentIndex >= words.length - 1) return;
+
+    // Start looking from the word AFTER the current one
+    for (let i = currentIndex; i < words.length - 1; i++) {
+      const word = words[i];
+      const nextWord = words[i + 1];
+
+      // If current word is a sentence ender or block end, the NEXT word is the start of a new sentence
+      if (/[\.\!\?]['"]?$/.test(word.text) || word.isBlockEnd) {
+        setCurrentIndex(i + 1);
+        return;
+      }
+    }
+    // If no more sentence boundaries, go to the end
+    setCurrentIndex(words.length - 1);
+  }, [currentIndex, words]);
+
+  const previousSentence = useCallback(() => {
+    if (currentIndex <= 0) return;
+
+    // 1. If we are in the middle of a sentence, go to the START of this sentence.
+    // 2. If we are already at the START of a sentence, go to the START of the PREVIOUS sentence.
+
+    // A "start of sentence" is a word whose PREVIOUS word was a sentence ender.
+    const isAtStartOfSentence = (idx) => {
+      if (idx === 0) return true;
+      const prevWord = words[idx - 1];
+      return /[\.\!\?]['"]?$/.test(prevWord.text) || prevWord.isBlockEnd;
+    };
+
+    let startIdx = currentIndex;
+
+    // If we are at the start of a sentence already, we want to go back further to the previous one
+    if (isAtStartOfSentence(startIdx)) {
+      startIdx--;
+    }
+
+    // Now look backwards for the start of the current/previous sentence
+    for (let i = startIdx; i >= 0; i--) {
+      if (isAtStartOfSentence(i)) {
+        setCurrentIndex(i);
+        return;
+      }
+    }
+
+    setCurrentIndex(0);
+  }, [currentIndex, words]);
+
   const reset = useCallback(() => setCurrentIndex(0), []);
   const setProgress = useCallback((index) => setCurrentIndex(index), []);
 
@@ -222,6 +271,8 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
     progress: words.length ? (currentIndex / words.length) * 100 : 0,
     reset,
     setProgress,
+    nextSentence,
+    previousSentence,
     fontSizes,
     toc,
     currentContext,

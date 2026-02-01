@@ -18,7 +18,7 @@ function App() {
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
   const [isRevolverMode, setIsRevolverMode] = useState(false);
 
-  const { currentWord, currentFrame, progress, reset, setProgress, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
+  const { currentWord, currentFrame, progress, reset, setProgress, nextSentence, previousSentence, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
 
   // Apply theme to html element
   useEffect(() => {
@@ -68,6 +68,8 @@ function App() {
             progress={progress}
             setProgress={setProgress}
             onReset={reset}
+            onNextSentence={nextSentence}
+            onPreviousSentence={previousSentence}
             totalWords={totalWords}
             currentIndex={currentIndex}
           />

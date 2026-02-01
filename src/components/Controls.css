@@ -42,7 +42,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
+}
+
+.playback-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-btn {
+    font-size: 1.8rem;
+    padding: 0.5rem;
 }
 
 .play-btn {
