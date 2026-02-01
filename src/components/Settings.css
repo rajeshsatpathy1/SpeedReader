@@ -161,3 +161,14 @@ input:checked+.slider:before {
     background-color: white;
     /* White circle */
 }
+
+@media (max-width: 600px) {
+    .settings-dropdown {
+        left: auto;
+        right: 0;
+        transform: none;
+        width: 300px;
+        max-width: calc(100vw - 2rem);
+        padding: 1rem;
+    }
+}
