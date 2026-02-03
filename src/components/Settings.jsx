@@ -8,21 +8,19 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode }) => {
-    const [visible, setVisible] = useState(false);
-
+const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isOpen, onToggle }) => {
     return (
         <div className="settings-container">
             <button
                 className="settings-btn"
-                onClick={() => setVisible(!visible)}
+                onClick={() => onToggle(!isOpen)}
                 aria-label="Settings"
                 title="Settings"
             >
                 ⚙
             </button>
 
-            {visible && (
+            {isOpen && (
                 <div className="settings-dropdown">
                     <div className="setting-group vertical">
                         <h3>Theme</h3>

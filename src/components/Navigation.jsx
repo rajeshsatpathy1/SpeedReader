@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import './Navigation.css';
 
-const Navigation = ({ toc, currentContext, onNavigate }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-
+const Navigation = ({ toc, currentContext, onNavigate, isOpen, onToggle }) => {
     if (!toc || toc.length === 0) return null;
-
-    const toggleExpand = () => setIsExpanded(!isExpanded);
 
     const handleSelect = (index) => {
         onNavigate(index);
-        setIsExpanded(false);
+        onToggle(false);
     };
 
     return (
         <div className="navigation-container">
             {/* Collapsed View: Current Context */}
-            <div className="nav-bar" onClick={toggleExpand}>
+            <div className="nav-bar" onClick={() => onToggle(!isOpen)}>
                 <div className="nav-info">
                     {currentContext.section && <span className="nav-section">{currentContext.section}</span>}
                     {currentContext.section && currentContext.subSection && <span className="nav-separator">›</span>}
@@ -24,13 +20,13 @@ const Navigation = ({ toc, currentContext, onNavigate }) => {
 
                     {!currentContext.section && !currentContext.subSection && <span className="nav-placeholder">Navigation</span>}
                 </div>
-                <div className={`nav-toggle ${isExpanded ? 'expanded' : ''}`}>
+                <div className={`nav-toggle ${isOpen ? 'expanded' : ''}`}>
                     ▼
                 </div>
             </div>
 
             {/* Expanded View: Table of Contents */}
-            {isExpanded && (
+            {isOpen && (
                 <div className="nav-dropdown">
                     {toc.map((item, i) => (
                         <div

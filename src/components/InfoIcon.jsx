@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import './InfoIcon.css';
 
-const InfoIcon = ({ onLoadSample }) => {
-    const [visible, setVisible] = useState(false);
-
+const InfoIcon = ({ onLoadSample, isOpen, onToggle }) => {
     return (
         <div
             className="info-icon-container"
         >
             <button
                 className="info-btn"
-                onClick={() => setVisible(!visible)}
+                onClick={() => onToggle(!isOpen)}
                 aria-label="App Information"
             >
                 i
             </button>
-            {visible && (
+            {isOpen && (
                 <div className="info-tooltip">
                     <strong>How it works:</strong>
                     <p>Paste your text to start speed reading.</p>
@@ -30,7 +28,7 @@ const InfoIcon = ({ onLoadSample }) => {
                                 onClick={(e) => {
                                     e.stopPropagation(); // Prevent closing
                                     onLoadSample();
-                                    setVisible(false);
+                                    onToggle(false);
                                 }}
                             >
                                 Try a default document
