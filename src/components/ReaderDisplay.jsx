@@ -1,27 +1,32 @@
 import React, { useMemo } from 'react';
 import './ReaderDisplay.css';
 
-const getORPIndex = (word) => {
-    const len = word.length;
+const getORPIndex = (word, graphemeCount) => {
+    const len = graphemeCount || word.length;
     if (len === 1) return 0;
-    if (len <= 5) return 1; // 2-5 -> 2nd letter (index 1) checks: "it"->t(1), "the"->h(1), "that"->h(1), "apple"->p(1)
-    if (len <= 9) return 2; // 6-9 -> 3rd letter
-    if (len <= 13) return 3; // 10-13 -> 4th letter
-    return 4; // >13 -> 5th letter
+    if (len <= 5) return 1;
+    if (len <= 9) return 2;
+    if (len <= 13) return 3;
+    return 4;
 };
 
 const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false }) => {
     // Helper to render a single word with ORP
     const renderORPWord = (word, key) => {
-        const { text, styles } = word;
-        const orpIndex = getORPIndex(text);
-        const leftPart = text.slice(0, orpIndex);
-        const highlightChar = text[orpIndex];
-        const rightPart = text.slice(orpIndex + 1);
+        const { text, styles, graphemes, script } = word;
+
+        // Use graphemes if available (for Indic scripts), otherwise fallback to characters
+        const units = graphemes || [...text];
+        const orpIndex = getORPIndex(text, units.length);
+
+        const leftPart = units.slice(0, orpIndex).join('');
+        const highlightChar = units[orpIndex];
+        const rightPart = units.slice(orpIndex + 1).join('');
 
         const className = ['reader-word'];
         if (styles.includes('B') || styles.includes('STRONG') || styles.includes('H1') || styles.includes('H2')) className.push('bold');
         if (styles.includes('I') || styles.includes('EM')) className.push('italic');
+        if (script === 'indic') className.push('indic-script');
 
         return (
             <div key={key} className={`word-row ${className.join(' ')}`}>
@@ -34,10 +39,11 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false }) =
 
     // Helper to render plain word
     const renderPlainWord = (word, key) => {
-        const { text, styles } = word;
-        const className = ['reader-word', 'plain']; // plain class for potential styling
+        const { text, styles, script } = word;
+        const className = ['reader-word', 'plain'];
         if (styles.includes('B') || styles.includes('STRONG') || styles.includes('H1') || styles.includes('H2')) className.push('bold');
         if (styles.includes('I') || styles.includes('EM')) className.push('italic');
+        if (script === 'indic') className.push('indic-script');
 
         return (
             <span key={key} className={className.join(' ')} style={{ whiteSpace: 'pre' }}>

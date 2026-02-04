@@ -23,25 +23,33 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
       const lengths = { heading: 0, sub: 0, normal: 0 };
       const tempToc = [];
 
+      // Detect script: Returns 'indic' if it contains Devanagari, Kannada, or Bengali characters
+      const detectScript = (text) => {
+        const indicRegex = /[\u0900-\u097F\u0C80-\u0CFF\u0980-\u09FF]/;
+        return indicRegex.test(text) ? 'indic' : 'latin';
+      };
+
+      // Grapheme segmenter for Indic scripts
+      const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+
       const traverse = (node, styles = []) => {
         if (node.nodeType === Node.TEXT_NODE) {
           const text = node.textContent;
           if (!text.trim()) return;
 
           // Split by whitespace, preserving hyphens/dashes as separate tokens
-          // Replace em-dash and hyphen with " - " or " — " to force split
           const preprocessed = text.replace(/([—-])/g, ' $1 ');
           const splitWords = preprocessed.trim().split(/\s+/);
+
           splitWords.forEach(word => {
             if (word) {
-              const len = word.length;
+              const script = detectScript(word);
+              // For Indic scripts, we store graphemes to prevent breaking characters
+              const graphemes = script === 'indic' ? [...segmenter.segment(word)].map(s => s.segment) : null;
+              const len = graphemes ? graphemes.length : word.length;
+
               if (styles.includes('H1') || styles.includes('H2')) {
                 lengths.heading = Math.max(lengths.heading, len);
-
-                // Add to TOC if it's the start of a heading word block
-                // Simplified: We'll grab the whole heading text later or just use the first word for now.
-                // Better approach for TOC: The parser splits words. We need to reconstruct the heading.
-                // Or simplified: Mark this word-index as a heading anchor.
               } else if (styles.some(s => ['H3', 'H4', 'H5', 'H6'].includes(s))) {
                 lengths.sub = Math.max(lengths.sub, len);
               } else {
@@ -50,6 +58,8 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
 
               result.push({
                 text: word,
+                graphemes, // null for Latin, array of strings for Indic
+                script,
                 styles: [...styles]
               });
             }
@@ -57,9 +67,7 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
         } else if (node.nodeType === Node.ELEMENT_NODE) {
           const tagName = node.tagName.toUpperCase();
 
-          // Capture styles
           const newStyles = [...styles];
-          // Standard structural tags
           if (['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'B', 'STRONG', 'I', 'EM', 'U', 'SMALL'].includes(tagName)) {
             newStyles.push(tagName);
           }
@@ -72,7 +80,6 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
             });
           }
 
-          // Inline styles
           const style = node.style;
           if (style.fontWeight === 'bold' || Number(style.fontWeight) >= 700) {
             if (!newStyles.includes('B')) newStyles.push('B');
@@ -81,25 +88,18 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
             if (!newStyles.includes('I')) newStyles.push('I');
           }
 
-          // Track length before visiting children to detect if words were added
           const startIndex = result.length;
-
           node.childNodes.forEach(child => traverse(child, newStyles));
 
-          // If this was a block element and we added words, mark the last word as block end
           const isBlock = ['P', 'DIV', 'LI', 'BR', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(tagName);
           if (isBlock && result.length > startIndex) {
             result[result.length - 1].isBlockEnd = true;
           }
-          // Handle BR specifically if it didn't wrap text (it usually doesn't have children)
           if (tagName === 'BR' && result.length > 0) {
-            // If we just hit a BR, the previous word (even if from a sibling) is effectively end of line/block
             result[result.length - 1].isBlockEnd = true;
           }
         }
       };
-
-
 
       traverse(tempDiv);
       return { result, lengths, tempToc };
@@ -161,12 +161,20 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
 
     // Punctuation
     const text = currentWordObj.text;
-    const lastChar = text.slice(-1);
-    const lastTwo = text.slice(-2); // for quotes like ."
+    const isIndic = currentWordObj.script === 'indic';
 
+    // Standard Latin Punctuation
     if (/[\.\!\?]['"]?$/.test(text)) {
       pauseFactor = Math.max(pauseFactor, 1.5);
-    } else if (/[,;:]['"]?$/.test(text)) {
+    }
+    // Indic Punctuation: । (Danda), ॥ (Double Danda)
+    else if (isIndic && /[\u0964]/.test(text)) {
+      pauseFactor = Math.max(pauseFactor, 1.5);
+    } else if (isIndic && /[\u0965]/.test(text)) {
+      pauseFactor = Math.max(pauseFactor, 1.8);
+    }
+    // Clause breaks
+    else if (/[,;:]['"]?$/.test(text)) {
       pauseFactor = Math.max(pauseFactor, 1.2);
     } else if (/[\-\(\)]/.test(text)) {
       pauseFactor = Math.max(pauseFactor, 1.2);
@@ -221,7 +229,11 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
       const nextWord = words[i + 1];
 
       // If current word is a sentence ender or block end, the NEXT word is the start of a new sentence
-      if (/[\.\!\?]['"]?$/.test(word.text) || word.isBlockEnd) {
+      const wordText = word.text;
+      const isIndic = word.script === 'indic';
+      const isSentenceEnd = /[\.\!\?]['"]?$/.test(wordText) || (isIndic && /[\u0964\u0965]/.test(wordText));
+
+      if (isSentenceEnd || word.isBlockEnd) {
         setCurrentIndex(i + 1);
         return;
       }
@@ -240,7 +252,11 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
     const isAtStartOfSentence = (idx) => {
       if (idx === 0) return true;
       const prevWord = words[idx - 1];
-      return /[\.\!\?]['"]?$/.test(prevWord.text) || prevWord.isBlockEnd;
+      const prevText = prevWord.text;
+      const isIndic = prevWord.script === 'indic';
+
+      const isSentenceEnd = /[\.\!\?]['"]?$/.test(prevText) || (isIndic && /[\u0964\u0965]/.test(prevText));
+      return isSentenceEnd || prevWord.isBlockEnd;
     };
 
     let startIdx = currentIndex;
@@ -288,7 +304,11 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
       const isBoundary = (w1, w2) => {
         if (!w1 || !w2) return false;
         // Sentence Punctuation
-        if (/[\.\!\?]['"]?$/.test(w1.text)) return true;
+        const t1 = w1.text;
+        const isIndic1 = w1.script === 'indic';
+        const isSentenceEnd1 = /[\.\!\?]['"]?$/.test(t1) || (isIndic1 && /[\u0964\u0965]/.test(t1));
+
+        if (isSentenceEnd1) return true;
         // Block/Paragraph End
         if (w1.isBlockEnd) return true;
         // Heading Change

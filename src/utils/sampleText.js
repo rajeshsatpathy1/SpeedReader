@@ -64,4 +64,16 @@ export const sampleText = `<h1>Prologue: The Wheel of Yugas</h1>
 <p>Maya stood in the doorway of the shop, her face a mask once more, but her eyes... her eyes told him everything.</p>
 <p><i>I love you. I'm sorry. I should have told you when you were here with me. Survive.</i></p>
 <p>Rishi followed Yuki into the smoke, into the waiting portal that would take him to the Citadel, into a destiny he couldn't begin to comprehend. Behind him, Maya Vosh stood alone in a shop full of broken things, and for the first time in fifteen years, she allowed herself to weep.</p>
-<p>She regretted not telling him. Not saying the words. But perhaps he'd known anyway.</p>`;
+<p>She regretted not telling him. Not saying the words. But perhaps he'd known anyway.</p>
+
+<h1>Hindi Section</h1>
+<p>नमस्ते दुनिया। यह एक गति पाठक (Speed Reader) का परीक्षण संस्करण है। यह विशेष रूप से भारतीय भाषाओं के लिए अनुकूलित है।</p>
+<p>देवनागरी लिपि में अक्षरों का संयोजन जटिल हो सकता है। हमारा एल्गोरिदम अब इन संयोजनों को सही ढंग से संभालता है।</p>
+
+<h1>Kannada Section</h1>
+<p>ನಮಸ್ಕಾರ ಪ್ರಪಂಚ. ಇದು ವೇಗವಾಗಿ ಓದುವ ಸಾಧನವಾಗಿದೆ. ಕನ್ನಡ ಭಾಷೆಯ ಪಠ್ಯವನ್ನು ಸುಲಭವಾಗಿ ಓದಲು ಇದು ಸಹಾಯ ಮಾಡುತ್ತದೆ.</p>
+<p>ಕನ್ನಡದಲ್ಲಿ ಒತ್ತಕ್ಷರಗಳು ಮತ್ತು ಗುಣಿತಾಕ್ಷರಗಳು ಬಹಳ ಮುಖ್ಯ. ನಮ್ಮ ತಂತ್ರಜ್ಞಾನವು ಇವುಗಳನ್ನು ಸರಿಯಾಗಿ ವಿಭಜಿಸಿ ತೋರಿಸುತ್ತದೆ.</p>
+
+<h1>Bengali Section</h1>
+<p>হ্যালো দুনিয়া। এটি একটি গতি পাঠক। এই টুলটি বাংলা ভাষার পাঠ্যকে দ্রুত পড়ার উপযোগী করে তোলে।</p>
+<p>বাংলা ভাষায় যুক্তাক্ষরগুলির গঠন বেশ বৈচিত্র্যময়। আমাদের সিস্টেম এখন এগুলিকে নির্ভুলভাবে প্রদর্শন করতে সক্ষম।</p>`;
