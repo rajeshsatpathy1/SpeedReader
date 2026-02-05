@@ -36,7 +36,7 @@ function App() {
   useEffect(() => {
     const loadBuffer = async () => {
       try {
-        const response = await fetch('/assets/music/farran_ez-string-violin-cello-loop-456150.mp3');
+        const response = await fetch(`${import.meta.env.BASE_URL}assets/music/farran_ez-string-violin-cello-loop-456150.mp3`);
         const arrayBuffer = await response.arrayBuffer();
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         audioContextRef.current = new AudioContextClass();
