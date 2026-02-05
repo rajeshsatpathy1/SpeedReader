@@ -21,18 +21,18 @@ const InfoIcon = ({ onLoadSample, isOpen, onToggle }) => {
                     <div className="info-section">
                         <strong>Keyboard Shortcuts:</strong>
                         <ul className="info-list">
-                            <li><kbd>Space</kbd> : Play / Pause</li>
-                            <li><kbd>→</kbd> : Next Sentence</li>
-                            <li><kbd>←</kbd> : Previous Sentence</li>
-                            <li><kbd>Esc</kbd> : Close Menu / Exit Focus Mode</li>
+                            <li><kbd>Space</kbd><span> : Play / Pause</span></li>
+                            <li><kbd>→</kbd><span> : Next Sentence</span></li>
+                            <li><kbd>←</kbd><span> : Previous Sentence</span></li>
+                            <li><kbd>Esc</kbd><span> : Close Menu / Exit Focus Mode</span></li>
                         </ul>
                     </div>
 
                     <div className="info-section">
                         <strong>Pro Tips:</strong>
                         <ul className="info-list">
-                            <li><b>Double Tap</b> to toggle Focus Mode</li>
-                            <li>Use the <b>Navigation Bar</b> to jump between sections</li>
+                            <li><span><b>Double Tap</b> to toggle Focus Mode</span></li>
+                            <li><span>Use the <b>Navigation Bar</b> to jump between sections</span></li>
                         </ul>
                     </div>
 
