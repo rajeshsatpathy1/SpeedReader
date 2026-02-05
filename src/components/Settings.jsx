@@ -8,7 +8,7 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isOpen, onToggle }) => {
+const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isFocusMode, setIsFocusMode, hasStarted, isOpen, onToggle }) => {
     return (
         <div className="settings-container">
             <button
@@ -44,16 +44,42 @@ const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, i
                         </div>
                     </div>
 
-                    <div className="setting-group-row">
-                        <h3>Revolver Mode</h3>
-                        <label className="switch">
-                            <input
-                                type="checkbox"
-                                checked={isRevolverMode}
-                                onChange={(e) => setIsRevolverMode(e.target.checked)}
-                            />
-                            <span className="slider round"></span>
-                        </label>
+                    <div className="setting-group-row-container" title="Displays words in a 3-word sliding window for better context.">
+                        <div className="setting-group-row">
+                            <h3>Revolver Mode</h3>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={isRevolverMode}
+                                    onChange={(e) => setIsRevolverMode(e.target.checked)}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
+                        <p className="setting-description">Displays words in a 3-word sliding window for better context.</p>
+                    </div>
+
+                    <div
+                        className={`setting-group-row-container ${!hasStarted ? 'disabled' : ''}`}
+                        title={hasStarted ? "Immersive mode that hides all UI elements (Double Tap to toggle)." : "Start reading to enable Focus Mode."}
+                    >
+                        <div className="setting-group-row">
+                            <h3>Focus Mode</h3>
+                            <label className="switch focus-switch">
+                                <input
+                                    type="checkbox"
+                                    checked={isFocusMode}
+                                    onChange={(e) => setIsFocusMode(e.target.checked)}
+                                    disabled={!hasStarted}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
+                        <p className="setting-description">
+                            {hasStarted
+                                ? "Immersive mode that hides all UI elements (Double Tap to toggle)."
+                                : "Start reading to enable Focus Mode."}
+                        </p>
                     </div>
                 </div>
             )}

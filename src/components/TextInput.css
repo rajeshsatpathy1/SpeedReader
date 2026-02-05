@@ -82,6 +82,12 @@
     width: 100%;
 }
 
+@media (max-width: 480px) {
+    .action-row {
+        flex-direction: column;
+    }
+}
+
 .start-btn {
     flex: 1;
     /* Sharing space equally */

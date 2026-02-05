@@ -17,6 +17,7 @@ function App() {
 
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
   const [isRevolverMode, setIsRevolverMode] = useState(true);
+  const [isFocusMode, setIsFocusMode] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null); // 'settings', 'info', 'nav', or null
 
   const { currentWord, currentFrame, progress, reset, setProgress, nextSentence, previousSentence, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
@@ -25,7 +26,7 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Ignore if user is typing in the text input
-      if (!hasStarted && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT')) {
+      if (!hasStarted && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT' || e.target.contentEditable === 'true')) {
         return;
       }
 
@@ -37,30 +38,41 @@ function App() {
       } else if (e.key === 'ArrowLeft') {
         previousSentence();
       } else if (e.key === 'Escape') {
-        setOpenDropdown(null);
+        if (isFocusMode) {
+          setIsFocusMode(false);
+        } else {
+          setOpenDropdown(null);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hasStarted, nextSentence, previousSentence]);
+  }, [hasStarted, nextSentence, previousSentence, isFocusMode]);
 
-  // Click outside to close dropdowns
+  // Double tap to toggle Focus Mode
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (openDropdown && !e.target.closest('.settings-container') && !e.target.closest('.info-icon-container') && !e.target.closest('.navigation-container')) {
-        setOpenDropdown(null);
+    const handleDblClick = () => {
+      if (hasStarted) {
+        setIsFocusMode(prev => !prev);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [openDropdown]);
+    window.addEventListener('dblclick', handleDblClick);
+    return () => window.removeEventListener('dblclick', handleDblClick);
+  }, [hasStarted]);
 
   // Apply theme to html element
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', currentTheme);
   }, [currentTheme]);
+
+  useEffect(() => {
+    if (isFocusMode) {
+      document.body.classList.add('focus-mode-active');
+    } else {
+      document.body.classList.remove('focus-mode-active');
+    }
+  }, [isFocusMode]);
 
   const handleStart = () => {
     setHasStarted(true);
@@ -73,6 +85,7 @@ function App() {
     setIsPlaying(false);
     setHasStarted(false);
     setOpenDropdown(null);
+    setIsFocusMode(false);
   };
 
   const handleLoadSample = () => {
@@ -87,7 +100,7 @@ function App() {
 
   return (
     <>
-      <h1 className="title">
+      <h1 className={`title ${isFocusMode ? 'hidden-ui' : ''}`}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem' }}>
           {!hasStarted && (
             <InfoIcon
@@ -104,6 +117,9 @@ function App() {
             setTheme={setCurrentTheme}
             isRevolverMode={isRevolverMode}
             setIsRevolverMode={setIsRevolverMode}
+            isFocusMode={isFocusMode}
+            setIsFocusMode={setIsFocusMode}
+            hasStarted={hasStarted}
             isOpen={openDropdown === 'settings'}
             onToggle={(open) => setOpenDropdown(open ? 'settings' : null)}
           />
@@ -114,13 +130,16 @@ function App() {
         <TextInput setInputText={setInputText} onStart={handleStart} initialValue={inputText} />
       ) : (
         <>
-          <Navigation
-            toc={toc}
-            currentContext={currentContext}
-            onNavigate={setProgress}
-            isOpen={openDropdown === 'nav'}
-            onToggle={(open) => setOpenDropdown(open ? 'nav' : null)}
-          />
+          <div className={isFocusMode ? 'hidden-ui' : ''}>
+            <Navigation
+              toc={toc}
+              currentContext={currentContext}
+              onNavigate={setProgress}
+              isOpen={openDropdown === 'nav'}
+              onToggle={(open) => setOpenDropdown(open ? 'nav' : null)}
+            />
+          </div>
+
           <ReaderDisplay
             wordObj={currentWord}
             words={currentFrame}
@@ -128,23 +147,25 @@ function App() {
             isRevolver={isRevolverMode}
           />
 
-          <Controls
-            isPlaying={isPlaying}
-            setIsPlaying={setIsPlaying}
-            wpm={wpm}
-            setWpm={setWpm}
-            progress={progress}
-            setProgress={setProgress}
-            onReset={reset}
-            onNextSentence={nextSentence}
-            onPreviousSentence={previousSentence}
-            totalWords={totalWords}
-            currentIndex={currentIndex}
-          />
+          <div className={isFocusMode ? 'hidden-ui' : ''}>
+            <Controls
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              wpm={wpm}
+              setWpm={setWpm}
+              progress={progress}
+              setProgress={setProgress}
+              onReset={reset}
+              onNextSentence={nextSentence}
+              onPreviousSentence={previousSentence}
+              totalWords={totalWords}
+              currentIndex={currentIndex}
+            />
 
-          <button style={{ marginTop: '2rem', background: 'transparent', border: 'none', color: 'var(--text-color)', opacity: 0.5, cursor: 'pointer', textDecoration: 'underline' }} onClick={handleBackToEdit}>
-            Back to Editor
-          </button>
+            <button style={{ marginTop: '2rem', background: 'transparent', border: 'none', color: 'var(--text-color)', opacity: 0.5, cursor: 'pointer', textDecoration: 'underline' }} onClick={handleBackToEdit}>
+              Back to Editor
+            </button>
+          </div>
         </>
       )}
     </>

@@ -20,15 +20,17 @@ const Controls = ({ isPlaying, setIsPlaying, wpm, setWpm, progress, setProgress,
                     className="progress-slider"
                     disabled={totalWords === 0}
                 />
-                <div className="progress-info">
-                    {currentIndex + 1} / {totalWords}
+                <div className="progress-row">
+                    <button className="icon-btn restart-btn" onClick={onReset} title="Restart">
+                        ↺
+                    </button>
+                    <div className="progress-info">
+                        {currentIndex + 1} / {totalWords}
+                    </div>
                 </div>
             </div>
 
             <div className="main-controls">
-                <button className="icon-btn" onClick={onReset} title="Restart">
-                    ↺
-                </button>
                 <div className="playback-group">
                     <button className="icon-btn nav-btn" onClick={onPreviousSentence} title="Previous Sentence">
                         «

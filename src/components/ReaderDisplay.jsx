@@ -85,8 +85,7 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false }) =
     if ((!words || words.length === 0) && !wordObj) return <div className="reader-display placeholder">Ready</div>;
 
     const containerStyles = {
-        fontSize: fontSizeValue,
-        minHeight: isRevolver ? '300px' : '200px'
+        fontSize: fontSizeValue
     }
 
     if (isRevolver) {

@@ -13,7 +13,7 @@
 
 @media (max-width: 600px) {
   #root {
-    padding: 1rem;
+    padding: 1rem 0.5rem;
   }
 }
 
@@ -22,12 +22,23 @@
   font-weight: 900;
   margin-bottom: 2rem;
   letter-spacing: -2px;
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+  /* Ensure title and its dropdowns are above other content */
 }
 
 @media (max-width: 600px) {
   .title {
     font-size: 2rem;
     margin-bottom: 1rem;
+    letter-spacing: -1px;
+  }
+
+  .title>div {
+    gap: 0.5rem !important;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 

@@ -3,7 +3,9 @@
     max-width: 600px;
     margin: 0 auto 1rem auto;
     position: relative;
-    z-index: 100;
+    z-index: 500;
+    box-sizing: border-box;
+    /* Match controls sizing */
 }
 
 .nav-bar {
@@ -32,6 +34,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
 }
 
 .nav-section {

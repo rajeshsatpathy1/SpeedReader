@@ -14,8 +14,20 @@
 
 @media (max-width: 600px) {
     .controls-container {
+        gap: 0.75rem;
+        padding: 0.5rem;
+    }
+
+    .main-controls {
         gap: 1rem;
-        padding: 0.75rem;
+    }
+
+    .playback-group {
+        gap: 0.75rem;
+    }
+
+    .nav-btn {
+        font-size: 1.4rem;
     }
 }
 
@@ -32,9 +44,19 @@
     accent-color: var(--highlight-color);
 }
 
+.progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.restart-btn {
+    font-size: 1.2rem !important;
+}
+
 .progress-info {
     font-size: 0.8rem;
-    text-align: right;
     opacity: 0.7;
 }
 
@@ -42,7 +64,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    width: 100%;
 }
 
 .playback-group {
