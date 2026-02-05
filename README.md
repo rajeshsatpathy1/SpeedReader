@@ -25,12 +25,19 @@ A premium, distraction-free speed reading web application built with **React 19*
 - **Fluid UI**: A modern, clean interface with smooth micro-animations.
 - **Custom Themes**: Choose from Light, Dark, Sepia, or the immersive Matrix theme.
 - **Mobile First**: Fully responsive design with touch-optimized controls and overflow-proof layouts.
+- **Focus Mode**: An immersive reading experience that hides all distraction elements with a simple gesture.
+- **Atmospheric Audio**: Optional background strings to help you get into the flow of reading.
+    - *Gapless Looping Engine*: Uses a dual-source Web Audio scheduler to overlap buffers by 1s (`nextStart = currentStart + (duration / speed) - crossfade`), ensuring zero-latency transitions via linear gain crossfading.
 
 ## 🛠️ Tech Stack
 
 - **Core**: React 19, Vite, Vanilla CSS
 - **Parsing**: `mammoth.js` (DOCX), `pdfjs-dist` (PDF)
 - **State Management**: Custom hooks (`useRSVP`) for precise timing and control.
+
+## 📜 Credits & Attribution
+
+- **Music**: Music by <a href="https://pixabay.com/users/farran_ez-45967570/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=456150">Alfarran Basalim</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=456150">Pixabay</a>.
 
 ## 🚀 Getting Started
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './Settings.css';
 
 const THEMES = [
@@ -8,7 +8,10 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isFocusMode, setIsFocusMode, hasStarted, isOpen, onToggle }) => {
+const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isFocusMode, setIsFocusMode, hasStarted, isPlayingMusic, toggleMusic, musicVolume, setMusicVolume, musicSpeed, setMusicSpeed, isOpen, onToggle }) => {
+    const dropdownRef = useRef(null);
+
+    const speedOptions = [1, 1.25, 1.5, 1.75, 2];
     return (
         <div className="settings-container">
             <button
@@ -59,13 +62,10 @@ const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, i
                         <p className="setting-description">Displays words in a 3-word sliding window for better context.</p>
                     </div>
 
-                    <div
-                        className={`setting-group-row-container ${!hasStarted ? 'disabled' : ''}`}
-                        title={hasStarted ? "Immersive mode that hides all UI elements (Double Tap to toggle)." : "Start reading to enable Focus Mode."}
-                    >
+                    <div className="setting-group-row-container" title="Focus Mode hides UI elements for a distraction-free experience.">
                         <div className="setting-group-row">
                             <h3>Focus Mode</h3>
-                            <label className="switch focus-switch">
+                            <label className="switch">
                                 <input
                                     type="checkbox"
                                     checked={isFocusMode}
@@ -75,11 +75,45 @@ const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, i
                                 <span className="slider round"></span>
                             </label>
                         </div>
-                        <p className="setting-description">
-                            {hasStarted
-                                ? "Immersive mode that hides all UI elements (Double Tap to toggle)."
-                                : "Start reading to enable Focus Mode."}
-                        </p>
+                        <p className="setting-description">Hides UI for focus. (Double tap to toggle during reading)</p>
+                    </div>
+
+                    <div className="separator"></div>
+
+                    <div className="setting-group">
+                        <div className="setting-header">
+                            <h3>Atmosphere</h3>
+                            <button
+                                className={`music-mini-toggle ${isPlayingMusic ? 'active' : ''}`}
+                                onClick={toggleMusic}
+                            >
+                                {isPlayingMusic ? 'Stop' : 'Play'}
+                            </button>
+                        </div>
+
+                        <div className="setting-sub-row">
+                            <span className="setting-label">Volume</span>
+                            <input
+                                type="range"
+                                min="0" max="1" step="0.01"
+                                value={musicVolume}
+                                onChange={(e) => setMusicVolume(parseFloat(e.target.value))}
+                                className="mini-slider"
+                            />
+                        </div>
+
+                        <div className="setting-sub-row">
+                            <span className="setting-label">Music Speed</span>
+                            <select
+                                className="mini-speed-dropdown"
+                                value={musicSpeed}
+                                onChange={(e) => setMusicSpeed(parseFloat(e.target.value))}
+                            >
+                                {speedOptions.map(s => (
+                                    <option key={s} value={s}>{s}x</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                 </div>
             )}

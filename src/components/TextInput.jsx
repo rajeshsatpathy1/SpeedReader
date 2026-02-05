@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import './TextInput.css';
 import { parseFile } from '../utils/fileParser';
 
-const TextInput = ({ setInputText, onStart, initialValue = '' }) => {
+const TextInput = ({ setInputText, onStart, initialValue = '', isPlayingMusic, toggleMusic, musicVolume, setMusicVolume, musicSpeed, setMusicSpeed }) => {
     const editorRef = useRef(null);
     const fileInputRef = useRef(null);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -53,6 +53,8 @@ const TextInput = ({ setInputText, onStart, initialValue = '' }) => {
         }
     };
 
+    const speedOptions = [1, 1.25, 1.5, 1.75, 2];
+
     return (
         <div className="text-input-container">
             <div className="editor-wrapper">
@@ -84,6 +86,51 @@ const TextInput = ({ setInputText, onStart, initialValue = '' }) => {
                 <button className="start-btn" onClick={handleStart} disabled={isProcessing}>
                     Start Reading
                 </button>
+            </div>
+
+            <div className="music-player-row">
+                <div className="music-controls">
+                    <button
+                        className={`music-toggle-btn ${isPlayingMusic ? 'active' : ''}`}
+                        onClick={toggleMusic}
+                        title={isPlayingMusic ? "Stop BGM" : "Play BGM"}
+                    >
+                        {isPlayingMusic ? '⏸ Stop BGM' : '▶ Play BGM'}
+                    </button>
+
+                    <div className="music-settings-group">
+                        <div className="volume-control">
+                            <span className="volume-icon">🔈</span>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={musicVolume}
+                                onChange={(e) => setMusicVolume(parseFloat(e.target.value))}
+                                className="volume-slider"
+                            />
+                            <span className="volume-icon">🔊</span>
+                        </div>
+
+                        <div className="music-speed-control">
+                            <label htmlFor="music-speed-select" className="speed-label">Speed</label>
+                            <select
+                                id="music-speed-select"
+                                className="music-speed-dropdown"
+                                value={musicSpeed}
+                                onChange={(e) => setMusicSpeed(parseFloat(e.target.value))}
+                            >
+                                {speedOptions.map(s => (
+                                    <option key={s} value={s}>{s}x</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <p className="music-attribution">
+                    Ambient Strings by Alfarran Basalim
+                </p>
             </div>
         </div>
     );

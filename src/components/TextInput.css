@@ -82,10 +82,139 @@
     width: 100%;
 }
 
-@media (max-width: 480px) {
-    .action-row {
-        flex-direction: column;
-    }
+
+.music-player-row {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.music-settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1;
+}
+
+.music-speed-control {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.speed-label {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.music-speed-dropdown {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.music-speed-dropdown option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.music-speed-dropdown:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.music-speed-dropdown:focus {
+    border-color: var(--highlight-color);
+}
+
+.music-player-row.reading-mode {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 500px;
+    justify-content: center;
+}
+
+.music-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+.music-toggle-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.music-toggle-btn.active {
+    background: var(--text-color);
+    color: var(--bg-color);
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-grow: 1;
+    max-width: 200px;
+}
+
+.volume-icon {
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+.volume-slider {
+    flex-grow: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    cursor: pointer;
+    accent-color: var(--highlight-color);
+}
+
+.music-attribution {
+    font-size: 0.65rem;
+    opacity: 0.4;
+    margin: 1rem 0 0 0;
+    font-style: italic;
+    text-align: center;
 }
 
 .start-btn {
