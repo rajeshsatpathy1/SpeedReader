@@ -27,7 +27,7 @@ We traverse the input HTML recursively:
 Instead of a fixed interval, we use a **Recursive Timeout Loop**. This allows us to calculate a unique duration for *every single word*.
 
 ### Delay Calculation
-$$ \text{Total Delay} = \text{Base Delay} \times \text{Structure Multiplier} \times \text{Pause Multiplier} $$
+$$ \text{Total Delay} = \text{Base Delay} \times \text{Structure Multiplier} \times \text{Pause Multiplier} \times \text{Long Word Multiplier} $$
 
 1.  **Base Delay**: Calculated from Words Per Minute (WPM).
     -   `Base = 60000 / WPM`
@@ -41,6 +41,11 @@ $$ \text{Total Delay} = \text{Base Delay} \times \text{Structure Multiplier} \ti
     -   **Sentence End (`. ! ?`)**: **1.5x** (Full stop pause).
     -   **Clause Break (` , ; : `)**: **1.2x** (Short breath).
     -   **Parenthetical (` ( ) - `)**: **1.2x** (Slight separation).
+
+4.  **Long Word Multiplier**:
+    -   **8+ Characters**: **1.2x** (Extra time for longer words).
+    -   **12+ Characters**: **1.5x** (Even more time for very long words).
+    -   *Note*: Multipliers are applied based on character count (or grapheme count for Indic scripts).
 
 ## 4. Optical Alignment (ORP)
 The visual renderer centers the word not by its geometric center, but by its **Optical Recognition Point (ORP)**—usually the character just slightly to the left of the center. This reduces eye movement (saccades) and prevents fatigue.

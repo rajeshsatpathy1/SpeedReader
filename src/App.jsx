@@ -12,7 +12,7 @@ import { sampleText } from './utils/sampleText'
 function App() {
   const [inputText, setInputText] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
-  const [wpm, setWpm] = useState(300);
+  const [wpm, setWpm] = useState(250);
   const [currentTheme, setCurrentTheme] = useState('dark');
 
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
@@ -24,6 +24,7 @@ function App() {
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [musicVolume, setMusicVolume] = useState(0.3);
   const [musicSpeed, setMusicSpeed] = useState(1.0);
+  const [linkBGM, setLinkBGM] = useState(true);
 
   const audioContextRef = useRef(null);
   const audioBufferRef = useRef(null);
@@ -142,6 +143,17 @@ function App() {
     }
   }, [isPlayingMusic]);
 
+  // Sync Music with Playback
+  useEffect(() => {
+    if (linkBGM) {
+      if (isPlaying && !isPlayingMusic) {
+        toggleMusic();
+      } else if (!isPlaying && isPlayingMusic) {
+        toggleMusic();
+      }
+    }
+  }, [isPlaying, linkBGM]);
+
   const { currentWord, currentFrame, progress, reset, setProgress, nextSentence, previousSentence, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
 
   // Keybindings
@@ -250,6 +262,8 @@ function App() {
             setMusicVolume={setMusicVolume}
             musicSpeed={musicSpeed}
             setMusicSpeed={setMusicSpeed}
+            linkBGM={linkBGM}
+            setLinkBGM={setLinkBGM}
             isOpen={openDropdown === 'settings'}
             onToggle={(open) => setOpenDropdown(open ? 'settings' : null)}
           />

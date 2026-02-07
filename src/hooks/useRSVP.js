@@ -180,8 +180,18 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
       pauseFactor = Math.max(pauseFactor, 1.2);
     }
 
+    // 3. Length Multiplier (Long Words)
+    let lengthMultiplier = 1.0;
+    const wordLength = isIndic ? (currentWordObj.graphemes ? currentWordObj.graphemes.length : text.length) : text.length;
+
+    if (wordLength >= 12) {
+      lengthMultiplier = 1.5;
+    } else if (wordLength >= 8) {
+      lengthMultiplier = 1.2;
+    }
+
     // Combine multipliers
-    const finalDelay = baseDelay * multiplier * pauseFactor;
+    const finalDelay = baseDelay * multiplier * pauseFactor * lengthMultiplier;
 
     timerRef.current = setTimeout(() => {
       setCurrentIndex(prev => prev + 1);

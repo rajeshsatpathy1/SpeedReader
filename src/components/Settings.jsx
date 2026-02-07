@@ -8,7 +8,7 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isFocusMode, setIsFocusMode, hasStarted, isPlayingMusic, toggleMusic, musicVolume, setMusicVolume, musicSpeed, setMusicSpeed, isOpen, onToggle }) => {
+const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isFocusMode, setIsFocusMode, hasStarted, isPlayingMusic, toggleMusic, musicVolume, setMusicVolume, musicSpeed, setMusicSpeed, linkBGM, setLinkBGM, isOpen, onToggle }) => {
     const dropdownRef = useRef(null);
 
     const speedOptions = [1, 1.25, 1.5, 1.75, 2];
@@ -113,6 +113,21 @@ const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, i
                                     <option key={s} value={s}>{s}x</option>
                                 ))}
                             </select>
+                        </div>
+
+                        <div className="setting-group-row-container" style={{ marginTop: '1rem', padding: '0' }}>
+                            <div className="setting-group-row">
+                                <span className="setting-label" style={{ fontWeight: '600' }}>Link BGM</span>
+                                <label className="switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={linkBGM}
+                                        onChange={(e) => setLinkBGM(e.target.checked)}
+                                    />
+                                    <span className="slider round"></span>
+                                </label>
+                            </div>
+                            <p className="setting-description">Auto-play/pause music with reading.</p>
                         </div>
                     </div>
                 </div>
