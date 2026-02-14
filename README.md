@@ -10,23 +10,26 @@ A premium, distraction-free speed reading web application built with **React 19*
 ### � Intelligent Reading Modes
 - **RSVP Engine**: Rapid Serial Visual Presentation. Words are displayed one-by-one, keeping your eyes fixed on a central "pivot" point to minimize saccadic eye movements.
 - **Revolver Mode**: A sliding window view that provides context by showing the previous and next words while keeping the current word centered.
+- **Horizontal Mode**: An advanced view for Revolver Mode that displays text in a natural left-to-right flow, mimicking traditional reading while maintaining the centered focus.
 
 ### 🧠 Smart Reading Logic
 - **Dynamic Pauses**: The engine automatically adjusts timing based on punctuation. Sentence endings, clause breaks, and paragraph transitions receive natural, context-aware pauses.
 - **Optical Alignment**: Advanced centering logic ensures the Optimal Recognition Point (ORP) — highlighted in red — stays perfectly aligned for maximum Focus.
 - **Adaptive Text Scaling**: Intelligent font size management that scales content based on word length to prevent UI overflow while maintaining readability.
+- **Length-based Delays**: The engine automatically slows down for longer, complex words to ensure you have enough time to process them.
 
 ### 📄 Comprehensive Content Support
 - **Rich Text Preservation**: Maintains **bold**, *italics*, and header structures from pasted text.
 - **Multi-Format Upload**: Seamlessly read from `.txt`, `.pdf`, and `.docx` files using client-side parsing.
-- **Pre-loaded Samples**: Includes high-quality sample text to get you started immediately.
+- **Built-in Library**: Access a curated collection of texts, including multilingual samples (Hindi, Kannada, Bengali, Spanish) to test the engine's capabilities with complex scripts.
 
 ### 🎨 Premium Experience
 - **Fluid UI**: A modern, clean interface with smooth micro-animations.
-- **Custom Themes**: Choose from Light, Dark, Sepia, or the immersive Matrix theme.
+- **Refined Themes**: Professionally calibrated Light, Dark, Sepia, and Matrix themes for optimal contrast in any environment.
 - **Mobile First**: Fully responsive design with touch-optimized controls and overflow-proof layouts.
 - **Focus Mode**: An immersive reading experience that hides all distraction elements with a simple gesture.
-- **Atmospheric Audio**: Optional background strings to help you get into the flow of reading.
+- **Atmospheric Audio**: High-fidelity background strings with full control over **Volume** and **Playback Speed**.
+    - *Linkable BGM*: Toggle to sync background music automatically with reading state (plays when reading, stops when paused).
     - *Gapless Looping Engine*: Uses a dual-source Web Audio scheduler to overlap buffers by 1s (`nextStart = currentStart + (duration / speed) - crossfade`), ensuring zero-latency transitions via linear gain crossfading.
 
 ## 🛠️ Tech Stack

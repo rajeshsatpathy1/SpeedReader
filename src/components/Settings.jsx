@@ -8,7 +8,7 @@ const THEMES = [
     { id: 'matrix', name: 'Matrix', previewBg: '#000000', previewText: '#00cc00', previewHighlight: '#e74c3c' },
 ];
 
-const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isFocusMode, setIsFocusMode, hasStarted, isPlayingMusic, toggleMusic, musicVolume, setMusicVolume, musicSpeed, setMusicSpeed, linkBGM, setLinkBGM, isOpen, onToggle }) => {
+const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, isHorizontalMode, setIsHorizontalMode, isFocusMode, setIsFocusMode, hasStarted, isPlayingMusic, toggleMusic, musicVolume, setMusicVolume, musicSpeed, setMusicSpeed, linkBGM, setLinkBGM, isOpen, onToggle }) => {
     const dropdownRef = useRef(null);
 
     const speedOptions = [1, 1.25, 1.5, 1.75, 2];
@@ -54,12 +54,33 @@ const Settings = ({ currentTheme, setTheme, isRevolverMode, setIsRevolverMode, i
                                 <input
                                     type="checkbox"
                                     checked={isRevolverMode}
-                                    onChange={(e) => setIsRevolverMode(e.target.checked)}
+                                    onChange={(e) => {
+                                        setIsRevolverMode(e.target.checked);
+                                        if (!e.target.checked) setIsHorizontalMode(false);
+                                    }}
                                 />
                                 <span className="slider round"></span>
                             </label>
                         </div>
                         <p className="setting-description">Displays words in a 3-word sliding window for better context.</p>
+                    </div>
+
+                    <div className="setting-group-row-container" title="Displays full sentences, highlighting words as you read.">
+                        <div className="setting-group-row">
+                            <h3>Horizontal Mode</h3>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={isHorizontalMode}
+                                    onChange={(e) => setIsHorizontalMode(e.target.checked)}
+                                    disabled={!isRevolverMode}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
+                        <p className="setting-description">
+                            Displays full sentences, highlighting words as you read. (Recommended only for wide screen mode)
+                        </p>
                     </div>
 
                     <div className="setting-group-row-container" title="Focus Mode hides UI elements for a distraction-free experience.">

@@ -17,5 +17,9 @@ export const libraryManifest = [
     {
         id: 'bengali',
         path: 'assets/library/bengali.html'
+    },
+    {
+        id: 'spanish',
+        path: 'assets/library/spanish.html'
     }
 ];

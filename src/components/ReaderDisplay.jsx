@@ -10,7 +10,7 @@ const getORPIndex = (word, graphemeCount) => {
     return 4;
 };
 
-const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false }) => {
+const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isHorizontal = false }) => {
     // Helper to render a single word with ORP
     const renderORPWord = (word, key) => {
         const { text, styles, graphemes, script } = word;
@@ -91,11 +91,40 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false }) =
     if (isRevolver) {
         return (
             <div className="reader-container" style={containerStyles}>
-                <div className="revolver-wrapper" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline', gap: '0.4em' }}>
-                    {words.map((item, i) => {
-                        return item.isPrimary ? renderORPWord(item.word, i) : renderPlainWord(item.word, i);
-                    })}
-                </div>
+                {isHorizontal ? (
+                    <div className="horizontal-revolver-grid">
+                        {words.map((item, i) => {
+                            const isPrimary = item.isPrimary;
+                            // Determine position relative to primary for grid placement
+                            // We assume the frame is well-formed by useRSVP (prev, curr, next)
+                            // Safest is to find primary index first, but map index works if we just style accordingly.
+                            // Actually, simple logic:
+                            // If isPrimary -> col 2
+                            // If not primary and it's the first one and we have a primary later? 
+                            // Let's just use specific classes.
+
+                            let positionClass = '';
+                            if (item.isPrimary) positionClass = 'pos-center';
+                            else if (i === 0 && !item.isPrimary) positionClass = 'pos-left';
+                            else positionClass = 'pos-right'; // Last one
+
+                            return (
+                                <span
+                                    key={i}
+                                    className={`horizontal-word ${item.isPrimary ? 'active' : ''} ${positionClass}`}
+                                >
+                                    {item.word.text}
+                                </span>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="revolver-wrapper" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline', gap: '0.4em' }}>
+                        {words.map((item, i) => {
+                            return item.isPrimary ? renderORPWord(item.word, i) : renderPlainWord(item.word, i);
+                        })}
+                    </div>
+                )}
             </div>
         );
     }

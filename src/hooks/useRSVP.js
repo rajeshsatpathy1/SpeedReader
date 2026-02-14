@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
+const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontalMode = false) => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fontSizes, setFontSizes] = useState({ heading: '4rem', subHeading: '3rem', normal: '4rem' });
@@ -304,6 +304,8 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false) => {
     currentContext,
     currentFrame: (() => {
       if (!words.length || currentIndex >= words.length) return [];
+
+      // Revolver Mode
       if (!isRevolverMode) return [{ word: words[currentIndex], isPrimary: true }];
 
       const frame = [];

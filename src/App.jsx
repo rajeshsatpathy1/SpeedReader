@@ -17,6 +17,7 @@ function App() {
 
   const [hasStarted, setHasStarted] = useState(false); // To toggle between input and reading mode
   const [isRevolverMode, setIsRevolverMode] = useState(true);
+  const [isHorizontalMode, setIsHorizontalMode] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null); // 'settings', 'info', 'nav', or null
 
@@ -154,7 +155,7 @@ function App() {
     }
   }, [isPlaying, linkBGM]);
 
-  const { currentWord, currentFrame, progress, reset, setProgress, nextSentence, previousSentence, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode);
+  const { currentWord, currentFrame, progress, reset, setProgress, nextSentence, previousSentence, totalWords, currentIndex, fontSizes, toc, currentContext } = useRSVP(inputText, wpm, isPlaying, isRevolverMode, isHorizontalMode);
 
   // Keybindings
   useEffect(() => {
@@ -253,6 +254,8 @@ function App() {
             setTheme={setCurrentTheme}
             isRevolverMode={isRevolverMode}
             setIsRevolverMode={setIsRevolverMode}
+            isHorizontalMode={isHorizontalMode}
+            setIsHorizontalMode={setIsHorizontalMode}
             isFocusMode={isFocusMode}
             setIsFocusMode={setIsFocusMode}
             hasStarted={hasStarted}
@@ -299,6 +302,7 @@ function App() {
             words={currentFrame}
             fontSizes={fontSizes}
             isRevolver={isRevolverMode}
+            isHorizontal={isHorizontalMode}
           />
 
           <div className={isFocusMode ? 'hidden-ui' : ''}>

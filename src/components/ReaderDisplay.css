@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 350px;
+  min-height: 350px;
   position: relative;
   width: 100%;
   max-width: 600px;
@@ -33,7 +33,7 @@
 
 .word-row {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: baseline;
   width: 100%;
   white-space: pre;
@@ -89,4 +89,56 @@
 
 .italic {
   font-style: italic;
+}
+
+/* Horizontal Mode */
+.reader-container.horizontal-mode {
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2rem;
+  height: auto;
+  min-height: 50vh;
+}
+
+.horizontal-revolver-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  width: 100%;
+  /* Use em to scale with font size */
+  gap: 0.5em;
+}
+
+.horizontal-word {
+  transition: opacity 0.1s;
+  opacity: 0.5;
+  white-space: pre;
+}
+
+.horizontal-word.pos-left {
+  grid-column: 1;
+  justify-self: end;
+  text-align: right;
+}
+
+.horizontal-word.pos-center {
+  grid-column: 2;
+  justify-self: center;
+  /* Always dead center */
+  text-align: center;
+}
+
+.horizontal-word.pos-right {
+  grid-column: 3;
+  justify-self: start;
+  text-align: left;
+}
+
+.horizontal-word.active {
+  opacity: 1;
+  font-weight: bold;
+  color: var(--highlight-color);
+  transform: none;
+  /* No scaling */
+  box-shadow: none;
 }
