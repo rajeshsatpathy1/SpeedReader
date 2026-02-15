@@ -18,6 +18,11 @@ A premium, distraction-free speed reading web application built with **React 19*
 - **Adaptive Text Scaling**: Intelligent font size management that scales content based on word length to prevent UI overflow while maintaining readability.
 - **Length-based Delays**: The engine automatically slows down for longer, complex words to ensure you have enough time to process them.
 
+### 🎮 Precision Control & Navigation
+- **Sentence-based Navigation**: Missed a detail? Meaningful controls allow you to jump to the previous or next sentence instantly, ensuring you never lose the thread of the narrative.
+- **Smart Navigation Bar**: A dynamic Table of Contents that tracks your progress. Click to jump instantly between chapters or sections, perfect for long-form content.
+- **Interactive Progress**: Scrub through the text with a precision slider or restart sections with a single click.
+
 ### 📄 Comprehensive Content Support
 - **Rich Text Preservation**: Maintains **bold**, *italics*, and header structures from pasted text.
 - **Multi-Format Upload**: Seamlessly read from `.txt`, `.pdf`, and `.docx` files using client-side parsing.
