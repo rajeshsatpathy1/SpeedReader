@@ -28,6 +28,7 @@ A premium, distraction-free speed reading web application built with **React 19*
 - **Rich Text Preservation**: Maintains **bold**, *italics*, and header structures from pasted text.
 - **Multi-Format Upload**: Seamlessly read from `.txt`, `.pdf`, and `.docx` files using client-side parsing.
 - **Built-in Library**: Access a curated collection of texts, including multilingual samples (Hindi, Kannada, Bengali, Spanish) to test the engine's capabilities with complex scripts.
+- **Embedded Image Support**: The reader now intelligently detects and renders `IMG` tags. Images are displayed with a significant (10x) pacing delay, allowing for visual absorption before resuming the text.
 
 ### 🎨 Premium Experience
 - **Fluid UI**: A modern, clean interface with smooth micro-animations.

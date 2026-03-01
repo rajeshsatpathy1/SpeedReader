@@ -19,6 +19,7 @@ Total delay is calculated word-by-word:
 | **Heading** | 2.0x | Identification of title/header |
 | **Paragraph End** | 1.8x | Mental reset between blocks |
 | **Sentence End** | 1.5x | Full stop (includes Indic ।) |
+| **Image (IMG)** | 10.0x | Significant pause for visual processing |
 | **Syllables (5+)** | 1.6x | **RiTa** linguistic complexity |
 | **Syllables (3-4)** | 1.3x | **RiTa** linguistic complexity |
 

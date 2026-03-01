@@ -119,8 +119,11 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isH
                         })}
                     </div>
                 ) : (
-                    <div className="revolver-wrapper" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline', gap: '0.4em' }}>
+                    <div className="revolver-wrapper" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '0.4em' }}>
                         {words.map((item, i) => {
+                            if (item.word.type === 'image') {
+                                return item.isPrimary ? <img key={i} src={item.word.src} alt={item.word.alt} className="reader-image" /> : null;
+                            }
                             return item.isPrimary ? renderORPWord(item.word, i) : renderPlainWord(item.word, i);
                         })}
                     </div>
@@ -132,7 +135,13 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isH
     // Standard Mode
     return (
         <div className="reader-container" style={containerStyles}>
-            {primaryWord && renderORPWord(primaryWord, 'single')}
+            {primaryWord && (
+                primaryWord.type === 'image' ? (
+                    <img src={primaryWord.src} alt={primaryWord.alt} className="reader-image" />
+                ) : (
+                    renderORPWord(primaryWord, 'single')
+                )
+            )}
             <div className="center-guide-top"></div>
             <div className="center-guide-bottom"></div>
         </div>

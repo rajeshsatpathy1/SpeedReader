@@ -197,6 +197,17 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
           const startIndex = result.length;
           node.childNodes.forEach(child => traverse(child, newStyles));
 
+          if (tagName === 'IMG') {
+            result.push({
+              type: 'image',
+              src: node.getAttribute('src'),
+              alt: node.getAttribute('alt') || '',
+              styles: [...styles],
+              sourceOffset: sourceCounter,
+              syllables: 0
+            });
+          }
+
           const isBlock = ['P', 'DIV', 'LI', 'BR', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(tagName);
           if (isBlock && result.length > startIndex) {
             result[result.length - 1].isBlockEnd = true;
@@ -256,6 +267,21 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
 
     const currentWordObj = words[currentIndex];
     const baseDelay = 60000 / wpm;
+
+    // Special handling for images
+    if (currentWordObj.type === 'image') {
+      const imageDelay = baseDelay * 10; // 10x delay for images
+      timerRef.current = setTimeout(() => {
+        setCurrentIndex(prev => {
+          const nextIdx = prev + 1;
+          if (words[nextIdx]) {
+            lastSourceOffset.current = words[nextIdx].sourceOffset;
+          }
+          return nextIdx;
+        });
+      }, imageDelay);
+      return () => clearTimeout(timerRef.current);
+    }
 
     let multiplier = 1.0;
 
@@ -467,7 +493,8 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
       // Previous Word
       if (currentIndex > 0) {
         const prevWord = words[currentIndex - 1];
-        if (!isBoundary(prevWord, currentWord)) {
+        // Don't show images as secondary words in revolver mode for now, it's too disruptive
+        if (!isBoundary(prevWord, currentWord) && prevWord.type !== 'image') {
           frame.push({ word: prevWord, isPrimary: false });
         }
       }
@@ -480,7 +507,8 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
       // Next Word
       if (currentIndex < words.length - 1) {
         const nextWord = words[currentIndex + 1];
-        if (!isBoundary(currentWord, nextWord)) {
+        // Don't show images as secondary words in revolver mode
+        if (!isBoundary(currentWord, nextWord) && nextWord.type !== 'image') {
           frame.push({ word: nextWord, isPrimary: false });
         }
       }
