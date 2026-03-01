@@ -12,10 +12,13 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "hyphenation.en-us": "^0.2.1",
+    "hypher": "^0.2.5",
     "mammoth": "^1.11.0",
     "pdfjs-dist": "^5.4.530",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "rita": "^3.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

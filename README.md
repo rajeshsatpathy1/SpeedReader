@@ -16,7 +16,8 @@ A premium, distraction-free speed reading web application built with **React 19*
 - **Dynamic Pauses**: The engine automatically adjusts timing based on punctuation. Sentence endings, clause breaks, and paragraph transitions receive natural, context-aware pauses.
 - **Optical Alignment**: Advanced centering logic ensures the Optimal Recognition Point (ORP) — highlighted in red — stays perfectly aligned for maximum Focus.
 - **Adaptive Text Scaling**: Intelligent font size management that scales content based on word length to prevent UI overflow while maintaining readability.
-- **Length-based Delays**: The engine automatically slows down for longer, complex words to ensure you have enough time to process them.
+- **Linguistic Pacing (RiTa Integration)**: The engine now understands the "phonetic weight" of words. It uses the `RiTa` library to calculate syllable counts, providing a more natural reading rhythm (e.g., more time for "internationalization" than "the").
+- **Dynamic Word Breaking**: For extremely long words that exceed screen capacity, the system uses `Hypher` to perform linguistically accurate hyphenation, splitting words into readable chunks.
 
 ### 🎮 Precision Control & Navigation
 - **Sentence-based Navigation**: Missed a detail? Meaningful controls allow you to jump to the previous or next sentence instantly, ensuring you never lose the thread of the narrative.
@@ -40,7 +41,7 @@ A premium, distraction-free speed reading web application built with **React 19*
 ## 🛠️ Tech Stack
 
 - **Core**: React 19, Vite, Vanilla CSS
-- **Parsing**: `mammoth.js` (DOCX), `pdfjs-dist` (PDF)
+- **Parsing**: `mammoth.js` (DOCX), `pdfjs-dist` (PDF), `RiTa` (Linguistic Analysis), `Hypher` (Hyphenation)
 - **State Management**: Custom hooks (`useRSVP`) for precise timing and control.
 
 ## 📜 Credits & Attribution

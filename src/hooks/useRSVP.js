@@ -1,12 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Hypher from 'hypher';
+import english from 'hyphenation.en-us';
+import { RiTa } from 'rita';
+
+const h = new Hypher(english);
 
 const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontalMode = false) => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fontSizes, setFontSizes] = useState({ heading: '4rem', subHeading: '3rem', normal: '4rem' });
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [toc, setToc] = useState([]);
   const [currentContext, setCurrentContext] = useState({ section: '', subSection: '' });
   const timerRef = useRef(null);
+  const lastSourceOffset = useRef(0);
+
+  // Viewport tracking
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Parsing Logic
   useEffect(() => {
@@ -23,6 +37,16 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
       const lengths = { heading: 0, sub: 0, normal: 0 };
       const tempToc = [];
 
+      // Dynamic Threshold based on window width
+      // At ~4rem (~64px), each char is ~38px. 320px fits ~8 chars.
+      // We'll use a safer heuristic for "too long for screen"
+      const CONTAINER_PADDING = 32; // px
+      const availableWidth = windowWidth - CONTAINER_PADDING;
+      const charWidthRem = 0.6; // average
+      const baseFontSizeRem = 3.5; // common reading size
+      const pixelsPerChar = charWidthRem * baseFontSizeRem * 16;
+      const capacityThreshold = Math.max(8, Math.floor(availableWidth / pixelsPerChar));
+
       // Detect script: Returns 'indic' if it contains Devanagari, Kannada, or Bengali characters
       const detectScript = (text) => {
         const indicRegex = /[\u0900-\u097F\u0C80-\u0CFF\u0980-\u09FF]/;
@@ -32,38 +56,120 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
       // Grapheme segmenter for Indic scripts
       const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
 
+      let sourceCounter = 0;
+
       const traverse = (node, styles = []) => {
         if (node.nodeType === Node.TEXT_NODE) {
           const text = node.textContent;
-          if (!text.trim()) return;
+          if (!text.trim()) {
+            sourceCounter += text.length;
+            return;
+          }
 
           // Split by whitespace, preserving hyphens/dashes as separate tokens
           const preprocessed = text.replace(/([—-])/g, ' $1 ');
           const splitWords = preprocessed.trim().split(/\s+/);
 
+          let lastIdx = 0;
+
           splitWords.forEach(word => {
-            if (word) {
-              const script = detectScript(word);
-              // For Indic scripts, we store graphemes to prevent breaking characters
-              const graphemes = script === 'indic' ? [...segmenter.segment(word)].map(s => s.segment) : null;
-              const len = graphemes ? graphemes.length : word.length;
+            if (!word) return;
 
-              if (styles.includes('H1') || styles.includes('H2')) {
-                lengths.heading = Math.max(lengths.heading, len);
-              } else if (styles.some(s => ['H3', 'H4', 'H5', 'H6'].includes(s))) {
-                lengths.sub = Math.max(lengths.sub, len);
-              } else {
-                lengths.normal = Math.max(lengths.normal, len);
+            // Find the offset of this word in the current text node
+            const wordIdx = text.indexOf(word, lastIdx);
+            const globalOffset = sourceCounter + wordIdx;
+            lastIdx = wordIdx + word.length;
+
+            const script = detectScript(word);
+
+            if (script === 'latin' && word.length > capacityThreshold && !word.includes('-') && !word.includes('—')) {
+              const syllables = h.hyphenate(word);
+              if (syllables.length > 1) {
+                let currentChunk = '';
+                const chunks = [];
+
+                for (let i = 0; i < syllables.length; i++) {
+                  currentChunk += syllables[i];
+
+                  // If chunk is long enough or it's the last syllable, finalize it
+                  const isLast = i === syllables.length - 1;
+                  if (currentChunk.length >= 4 || isLast) {
+                    chunks.push(isLast ? currentChunk : currentChunk + '-');
+                    currentChunk = '';
+                  }
+                }
+
+                // If the last chunk was too small and got orphaned
+                if (currentChunk) {
+                  if (chunks.length > 0) {
+                    const lastIdx = chunks.length - 1;
+                    chunks[lastIdx] = chunks[lastIdx].endsWith('-')
+                      ? chunks[lastIdx].slice(0, -1) + currentChunk
+                      : chunks[lastIdx] + currentChunk;
+                  } else {
+                    chunks.push(currentChunk);
+                  }
+                }
+
+                chunks.forEach(chunk => {
+                  const len = chunk.length;
+                  if (styles.includes('H1') || styles.includes('H2')) {
+                    lengths.heading = Math.max(lengths.heading, len);
+                  } else if (styles.some(s => ['H3', 'H4', 'H5', 'H6'].includes(s))) {
+                    lengths.sub = Math.max(lengths.sub, len);
+                  } else {
+                    lengths.normal = Math.max(lengths.normal, len);
+                  }
+
+                  // RiTa for linguistic syllable count of the chunk (used for pacing)
+                  const ritaSyllables = RiTa.syllables(chunk.replace(/-$/, ''));
+                  const syllableCount = ritaSyllables ? ritaSyllables.split('/').length : 1;
+
+                  result.push({
+                    text: chunk,
+                    graphemes: null,
+                    script: 'latin',
+                    styles: [...styles],
+                    sourceOffset: globalOffset, // All chunks share the same source start
+                    syllables: syllableCount
+                  });
+                });
+                return; // Skip the main push for this word
               }
-
-              result.push({
-                text: word,
-                graphemes, // null for Latin, array of strings for Indic
-                script,
-                styles: [...styles]
-              });
             }
+
+            // Normal word push (Latin or Indic)
+            const graphemes = script === 'indic' ? [...segmenter.segment(word)].map(s => s.segment) : null;
+            const len = graphemes ? graphemes.length : word.length;
+
+            if (styles.includes('H1') || styles.includes('H2')) {
+              lengths.heading = Math.max(lengths.heading, len);
+            } else if (styles.some(s => ['H3', 'H4', 'H5', 'H6'].includes(s))) {
+              lengths.sub = Math.max(lengths.sub, len);
+            } else {
+              lengths.normal = Math.max(lengths.normal, len);
+            }
+
+            // RiTa for linguistic syllable count (used for pacing)
+            let syllableCount = 1;
+            if (script === 'latin') {
+              const ritaSyllables = RiTa.syllables(word);
+              syllableCount = ritaSyllables ? ritaSyllables.split('/').length : 1;
+            } else if (script === 'indic') {
+              // For Indic scripts, use grapheme count as a proxy for syllable-like units
+              syllableCount = graphemes ? graphemes.length : 1;
+            }
+
+            result.push({
+              text: word,
+              graphemes,
+              script,
+              styles: [...styles],
+              sourceOffset: globalOffset,
+              syllables: syllableCount
+            });
           });
+          sourceCounter += text.length;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
           const tagName = node.tagName.toUpperCase();
 
@@ -112,8 +218,8 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
     setToc(refinedToc);
 
     // Calculate Safe Sizes
-    const CONTAINER_REM = 32; // ~512px at 16px base, comfortably fits in 600px width
-    const CHAR_EMPIRICAL_WIDTH = 0.6; // Approximate average width of a character in rem per 1rem font size
+    const CONTAINER_REM = 32; // ~512px at 16px base
+    const CHAR_EMPIRICAL_WIDTH = 0.6;
 
     const calculateSafeSize = (maxLen, maxCap) => {
       if (maxLen === 0) return maxCap;
@@ -122,14 +228,23 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
     };
 
     setFontSizes({
-      heading: calculateSafeSize(lengths.heading, 6), // Cap at 6rem
-      subHeading: calculateSafeSize(lengths.sub, 4.5), // Cap at 4.5rem
-      normal: calculateSafeSize(lengths.normal, 4.5) // Cap at 4.5rem
+      heading: calculateSafeSize(lengths.heading, 6),
+      subHeading: calculateSafeSize(lengths.sub, 4.5),
+      normal: calculateSafeSize(lengths.normal, 4.5)
     });
 
+    // Handle session preservation on re-parse (e.g. resize)
+    let newIndex = 0;
+    if (result.length > 0) {
+      // Find the word that closest matches the previous sourceOffset
+      const targetOffset = lastSourceOffset.current;
+      newIndex = result.findIndex(w => w.sourceOffset >= targetOffset);
+      if (newIndex === -1) newIndex = result.length - 1;
+    }
+
     setWords(result);
-    setCurrentIndex(0);
-  }, [inputText]);
+    setCurrentIndex(newIndex);
+  }, [inputText, windowWidth]);
 
   // Playback Logic
 
@@ -180,11 +295,17 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
       pauseFactor = Math.max(pauseFactor, 1.2);
     }
 
-    // 3. Length Multiplier (Long Words)
+    // 3. Length Multiplier (Long Words & Syllables)
     let lengthMultiplier = 1.0;
+    const syllableCount = currentWordObj.syllables || 1;
     const wordLength = isIndic ? (currentWordObj.graphemes ? currentWordObj.graphemes.length : text.length) : text.length;
 
-    if (wordLength >= 12) {
+    // Favor syllable count for Latin, grapheme count for Indic
+    if (syllableCount >= 5) {
+      lengthMultiplier = 1.6;
+    } else if (syllableCount >= 3) {
+      lengthMultiplier = 1.3;
+    } else if (wordLength >= 12) {
       lengthMultiplier = 1.5;
     } else if (wordLength >= 8) {
       lengthMultiplier = 1.2;
@@ -194,7 +315,13 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
     const finalDelay = baseDelay * multiplier * pauseFactor * lengthMultiplier;
 
     timerRef.current = setTimeout(() => {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex(prev => {
+        const nextIdx = prev + 1;
+        if (words[nextIdx]) {
+          lastSourceOffset.current = words[nextIdx].sourceOffset;
+        }
+        return nextIdx;
+      });
     }, finalDelay);
 
     return () => clearTimeout(timerRef.current);
@@ -287,8 +414,16 @@ const useRSVP = (inputText, wpm, isPlaying, isRevolverMode = false, isHorizontal
     setCurrentIndex(0);
   }, [currentIndex, words]);
 
-  const reset = useCallback(() => setCurrentIndex(0), []);
-  const setProgress = useCallback((index) => setCurrentIndex(index), []);
+  const reset = useCallback(() => {
+    setCurrentIndex(0);
+    lastSourceOffset.current = 0;
+  }, []);
+  const setProgress = useCallback((index) => {
+    setCurrentIndex(index);
+    if (words[index]) {
+      lastSourceOffset.current = words[index].sourceOffset;
+    }
+  }, [words]);
 
   return {
     currentWord: words[currentIndex] || null,

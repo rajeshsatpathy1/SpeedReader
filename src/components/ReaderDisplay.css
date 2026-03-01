@@ -36,7 +36,9 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: baseline;
   width: 100%;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  hyphens: auto;
   line-height: 1;
   font-family: 'Inter', sans-serif;
   /* Ensure tight packing of letters */
@@ -112,7 +114,8 @@
 .horizontal-word {
   transition: opacity 0.1s;
   opacity: 0.5;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .horizontal-word.pos-left {
