@@ -20,6 +20,7 @@ function App() {
   const [isHorizontalMode, setIsHorizontalMode] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null); // 'settings', 'info', 'nav', or null
+  const [bookmarks, setBookmarks] = useState([]);
 
   // Music Engine State
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
@@ -185,16 +186,6 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hasStarted, nextSentence, previousSentence, isFocusMode]);
 
-  // Double tap to toggle Focus Mode
-  useEffect(() => {
-    const handleDblClick = () => {
-      if (hasStarted) {
-        setIsFocusMode(prev => !prev);
-      }
-    };
-    window.addEventListener('dblclick', handleDblClick);
-    return () => window.removeEventListener('dblclick', handleDblClick);
-  }, [hasStarted]);
 
   // Apply theme to html element
   useEffect(() => {
@@ -229,8 +220,14 @@ function App() {
     setOpenDropdown(null);
   };
 
-  const toggleDropdown = (name) => {
-    setOpenDropdown(prev => prev === name ? null : name);
+  const toggleBookmark = (index) => {
+    setBookmarks(prev => {
+      if (prev.includes(index)) {
+        return prev.filter(i => i !== index);
+      } else {
+        return [...prev, index].sort((a, b) => a - b);
+      }
+    });
   };
 
   const speedOptions = [1, 1.25, 1.5, 1.75, 2];
@@ -271,6 +268,19 @@ function App() {
             onToggle={(open) => setOpenDropdown(open ? 'settings' : null)}
           />
         </div>
+        {hasStarted && totalWords > 0 && (
+          <div className="reading-stats">
+            Approx. {(() => {
+              const totalSeconds = Math.ceil((totalWords / wpm) * 60);
+              const mins = Math.floor(totalSeconds / 60);
+              const secs = totalSeconds % 60;
+              if (mins > 0) {
+                return `${mins}m ${secs}s`;
+              }
+              return `${secs}s`;
+            })()} to read
+          </div>
+        )}
       </h1>
 
       {!hasStarted ? (
@@ -303,6 +313,7 @@ function App() {
             fontSizes={fontSizes}
             isRevolver={isRevolverMode}
             isHorizontal={isHorizontalMode}
+            onToggleFocus={() => setIsFocusMode(prev => !prev)}
           />
 
           <div className={isFocusMode ? 'hidden-ui' : ''}>
@@ -318,6 +329,8 @@ function App() {
               onPreviousSentence={previousSentence}
               totalWords={totalWords}
               currentIndex={currentIndex}
+              bookmarks={bookmarks}
+              onToggleBookmark={toggleBookmark}
             />
 
             <div className="music-player-row reading-mode">

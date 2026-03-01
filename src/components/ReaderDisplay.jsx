@@ -10,7 +10,7 @@ const getORPIndex = (word, graphemeCount) => {
     return 4;
 };
 
-const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isHorizontal = false }) => {
+const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isHorizontal = false, onToggleFocus }) => {
     // Helper to render a single word with ORP
     const renderORPWord = (word, key) => {
         const { text, styles, graphemes, script } = word;
@@ -90,7 +90,7 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isH
 
     if (isRevolver) {
         return (
-            <div className="reader-container" style={containerStyles}>
+            <div className="reader-container" style={containerStyles} onDoubleClick={onToggleFocus}>
                 {isHorizontal ? (
                     <div className="horizontal-revolver-grid">
                         {words.map((item, i) => {
@@ -134,7 +134,7 @@ const ReaderDisplay = ({ wordObj, words = [], fontSizes, isRevolver = false, isH
 
     // Standard Mode
     return (
-        <div className="reader-container" style={containerStyles}>
+        <div className="reader-container" style={containerStyles} onDoubleClick={onToggleFocus}>
             {primaryWord && (
                 primaryWord.type === 'image' ? (
                     <img src={primaryWord.src} alt={primaryWord.alt} className="reader-image" />

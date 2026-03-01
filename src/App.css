@@ -45,3 +45,19 @@
 .highlight-text {
   color: var(--highlight-color);
 }
+
+.reading-stats {
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  margin-top: 0.5rem;
+  opacity: 0.6;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+@media (max-width: 600px) {
+  .reading-stats {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+}

@@ -38,10 +38,62 @@
     gap: 0.5rem;
 }
 
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .progress-slider {
     width: 100%;
     cursor: pointer;
     accent-color: var(--highlight-color);
+    position: relative;
+    z-index: 2;
+}
+
+.bookmarks-overlay {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.bookmark-marker {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    height: 12px;
+    background: var(--highlight-color);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.2s, opacity 0.2s;
+    opacity: 0.7;
+    z-index: 5;
+}
+
+.bookmark-marker:hover {
+    transform: translate(-50%, -50%) scale(1.5, 1.2);
+    opacity: 1;
+}
+
+.bookmark-btn svg {
+    display: block;
+    width: 1.2rem;
+    height: 1.2rem;
+    transition: transform 0.2s, stroke 0.2s;
+}
+
+.bookmark-btn:hover svg {
+    transform: scale(1.1);
+}
+
+.bookmark-btn.active svg {
+    filter: drop-shadow(0 0 5px var(--highlight-color));
 }
 
 .progress-row {

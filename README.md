@@ -21,8 +21,9 @@ A premium, distraction-free speed reading web application built with **React 19*
 
 ### 🎮 Precision Control & Navigation
 - **Sentence-based Navigation**: Missed a detail? Meaningful controls allow you to jump to the previous or next sentence instantly, ensuring you never lose the thread of the narrative.
+- **Reading Time Estimates**: Automatically calculates the approximate time required to complete the text based on your current WPM setting, displayed clearly in the header.
 - **Smart Navigation Bar**: A dynamic Table of Contents that tracks your progress. Click to jump instantly between chapters or sections, perfect for long-form content.
-- **Interactive Progress**: Scrub through the text with a precision slider or restart sections with a single click.
+- **Interactive Progress & Bookmarks**: Scrub through the text with a precision slider or add bookmarks to mark important sections for later revisitation.
 
 ### 📄 Comprehensive Content Support
 - **Rich Text Preservation**: Maintains **bold**, *italics*, and header structures from pasted text.
@@ -34,7 +35,7 @@ A premium, distraction-free speed reading web application built with **React 19*
 - **Fluid UI**: A modern, clean interface with smooth micro-animations.
 - **Refined Themes**: Professionally calibrated Light, Dark, Sepia, and Matrix themes for optimal contrast in any environment.
 - **Mobile First**: Fully responsive design with touch-optimized controls and overflow-proof layouts.
-- **Focus Mode**: An immersive reading experience that hides all distraction elements with a simple gesture.
+- **Focus Mode**: An immersive reading experience that hides all distraction elements. Toggled with a deliberate double-click gesture on the reader display to prevent accidental triggers.
 - **Atmospheric Audio**: High-fidelity background strings with full control over **Volume** and **Playback Speed**.
     - *Linkable BGM*: Toggle to sync background music automatically with reading state (plays when reading, stops when paused).
     - *Gapless Looping Engine*: Uses a dual-source Web Audio scheduler to overlap buffers by 1s (`nextStart = currentStart + (duration / speed) - crossfade`), ensuring zero-latency transitions via linear gain crossfading.
